@@ -1,8 +1,9 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, GraduationCap, Phone, Mail, LogIn } from 'lucide-react'
+import { Menu, X, Phone, Mail, LogIn } from 'lucide-react'
 import { school } from '../../data/mock'
+import logo from '../../assets/witty logo.jpeg'
 
 const links = [
   { to: '/', label: 'Home' },
@@ -32,8 +33,8 @@ export default function SiteNav() {
 
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         <Link to="/" className="flex items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-navy-800 text-white shadow-lg shadow-navy-800/30">
-            <GraduationCap size={24} />
+          <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-navy-800 shadow-lg shadow-navy-800/30">
+            <img src={logo} alt={`${school.name} logo`} className="h-9 w-9 object-contain" />
           </span>
           <span>
             <span className="block text-lg font-extrabold leading-tight tracking-tight text-navy-900">

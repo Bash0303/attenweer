@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
+import Seo from './components/Seo'
 
 const Home = lazy(() => import('./pages/public/Home'))
 const About = lazy(() => import('./pages/public/About'))
@@ -160,6 +161,7 @@ const parentRoutes = [
 function App() {
   return (
     <Suspense fallback={<Loader />}>
+      <Seo />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

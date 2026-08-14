@@ -24,6 +24,8 @@ import {
   KeyRound,
   X,
 } from 'lucide-react'
+import { school } from '../../data/mock'
+import logo from '../../assets/witty logo.jpeg'
 
 export const navGroups = {
   Admin: [
@@ -176,8 +178,8 @@ export default function Sidebar({ role, onClose, collapsed, open = false }) {
       className={`fixed inset-y-0 left-0 z-30 flex flex-col bg-navy-950 text-cream-100 transition-all duration-300 ${collapsed ? 'w-[72px]' : 'w-64'} ${open ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
     >
       <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gold-500 text-navy-950 font-extrabold">
-          W
+        <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl bg-white">
+          <img src={logo} alt={`${school.name} logo`} className="h-9 w-9 object-contain" />
         </span>
         {!collapsed && (
           <div className="min-w-0">

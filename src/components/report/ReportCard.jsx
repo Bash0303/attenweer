@@ -1,7 +1,8 @@
 import { forwardRef } from 'react'
-import { GraduationCap, Printer, Download } from 'lucide-react'
+import { Printer, Download } from 'lucide-react'
 import { school, resultSummary } from '../../data/mock'
 import Button from '../ui/Button'
+import logo from '../../assets/witty logo.jpeg'
 
 const gradeColor = {
   A: 'bg-emerald-50 text-emerald-600',
@@ -19,8 +20,8 @@ const ReportCardInner = forwardRef(({ student, rows, term = school.term, session
     <div ref={ref} id="report-card" className="rounded-2xl border border-navy-100 bg-white p-6 font-sans sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-navy-900 pb-4">
         <div className="flex items-center gap-3">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-navy-900 text-white">
-            <GraduationCap size={30} />
+          <span className="grid h-14 w-14 place-items-center overflow-hidden rounded-2xl bg-navy-900">
+            <img src={logo} alt={`${school.name} logo`} className="h-12 w-12 object-contain" />
           </span>
           <div>
             <h2 className="text-lg font-extrabold tracking-tight text-navy-900">{school.name}</h2>

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { GraduationCap, ShieldCheck, Users, BookOpen, HeartHandshake, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react'
+import { ShieldCheck, Users, BookOpen, HeartHandshake, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react'
 import SiteNav from '../../components/layout/SiteNav'
 import { useAuth } from '../../context/AuthContext'
 import Button from '../../components/ui/Button'
 import { school, demoUsers } from '../../data/mock'
+import logo from '../../assets/witty logo.jpeg'
 
 const roles = [
   { key: 'admin', label: 'Admin', icon: ShieldCheck, color: 'bg-navy-700', dot: 'bg-navy-600' },
@@ -67,7 +68,7 @@ export default function Login() {
             />
             <div className="relative">
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-gold-400">
-                <GraduationCap size={18} /> {school.shortName} Portal
+                <img src={logo} alt={`${school.name} logo`} className="h-7 w-7 rounded-lg object-contain" /> {school.shortName} Portal
               </span>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight">
                 One Account.<br />One Student.<br /><span className="text-gold-400">Connected.</span>

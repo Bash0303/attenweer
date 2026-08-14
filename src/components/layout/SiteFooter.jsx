@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Phone, Mail, MapPin } from 'lucide-react'
+import { Phone, Mail, MapPin } from 'lucide-react'
 import { school } from '../../data/mock'
+import logo from '../../assets/witty logo.jpeg'
 
 export default function SiteFooter() {
   return (
@@ -8,8 +9,8 @@ export default function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-white">
-              <GraduationCap size={24} />
+            <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-white/10">
+              <img src={logo} alt={`${school.name} logo`} className="h-9 w-9 object-contain" />
             </span>
             <span className="text-lg font-extrabold">Witty Group of Schools</span>
           </div>
