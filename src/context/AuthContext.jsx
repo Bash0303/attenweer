@@ -1,26 +1,63 @@
-import { createContext, useContext, useState } from 'react'
-import { demoUsers } from '../data/mock'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { api, getToken, setToken } from '../services/api'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [ready, setReady] = useState(false)
 
-  const login = (email, password) => {
-    const entry = Object.values(demoUsers).find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password,
-    )
-    if (entry) {
-      setUser(entry)
-      return { ok: true, user: entry }
+  useEffect(() => {
+    let cancelled = false
+    if (!getToken()) {
+      setReady(true)
+      return
     }
-    return { ok: false, error: 'Invalid email or password. Try a demo account below.' }
+    api('/auth/me')
+      .then((res) => {
+        if (!cancelled) setUser(res.user)
+      })
+      .catch(() => {
+        setToken(null)
+        if (!cancelled) setUser(null)
+      })
+      .finally(() => {
+        if (!cancelled) setReady(true)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const login = async (identifier, password) => {
+    try {
+      const res = await api('/auth/login', { method: 'POST', body: { identifier, password } })
+      setToken(res.token)
+      setUser(res.user)
+      return { ok: true, user: res.user }
+    } catch (err) {
+      return { ok: false, error: err.message || 'Login failed.' }
+    }
   }
 
-  const logout = () => setUser(null)
+  const logout = async () => {
+    try {
+      if (getToken()) await api('/auth/logout', { method: 'POST' })
+    } catch {
+      // token may already be invalid — clear anyway
+    }
+    setToken(null)
+    setUser(null)
+  }
+
+  const refresh = async () => {
+    const res = await api('/auth/me')
+    setUser(res.user)
+    return res.user
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, ready, login, logout, refresh }}>
       {children}
     </AuthContext.Provider>
   )

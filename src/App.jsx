@@ -7,9 +7,11 @@ const Home = lazy(() => import('./pages/public/Home'))
 const About = lazy(() => import('./pages/public/About'))
 const Register = lazy(() => import('./pages/public/Register'))
 const Login = lazy(() => import('./pages/public/Login'))
+const ForgotPassword = lazy(() => import('./pages/public/ForgotPassword'))
 
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminStudents = lazy(() => import('./pages/admin/AdminStudents'))
+const AdminAdmissions = lazy(() => import('./pages/admin/AdminAdmissions'))
 const AdminTeachers = lazy(() => import('./pages/admin/AdminTeachers'))
 const AdminParents = lazy(() => import('./pages/admin/AdminParents'))
 const AdminClasses = lazy(() => import('./pages/admin/AdminClasses'))
@@ -41,6 +43,7 @@ const TeacherTimetable = lazy(() => import('./pages/teacher/TeacherTimetable'))
 const TeacherAnnouncements = lazy(() => import('./pages/teacher/TeacherAnnouncements'))
 const TeacherMessages = lazy(() => import('./pages/teacher/TeacherMessages'))
 const TeacherProfile = lazy(() => import('./pages/teacher/TeacherProfile'))
+const TeacherPassword = lazy(() => import('./pages/teacher/TeacherPassword'))
 
 const StudentDashboard = lazy(() => import('./pages/student/StudentDashboard'))
 const StudentProfile = lazy(() => import('./pages/student/StudentProfile'))
@@ -48,6 +51,7 @@ const StudentSubjects = lazy(() => import('./pages/student/StudentSubjects'))
 const StudentTimetable = lazy(() => import('./pages/student/StudentTimetable'))
 const StudentAttendance = lazy(() => import('./pages/student/StudentAttendance'))
 const StudentResults = lazy(() => import('./pages/student/StudentResults'))
+const StudentScratchCard = lazy(() => import('./pages/student/StudentScratchCard'))
 const StudentAssignments = lazy(() => import('./pages/student/StudentAssignments'))
 const StudentExams = lazy(() => import('./pages/student/StudentExams'))
 const StudentFees = lazy(() => import('./pages/student/StudentFees'))
@@ -70,7 +74,8 @@ const ParentReports = lazy(() => import('./pages/parent/ParentReports'))
 const ParentPassword = lazy(() => import('./pages/parent/ParentPassword'))
 
 function RoleRoute({ role, children }) {
-  const { user } = useAuth()
+  const { user, ready } = useAuth()
+  if (!ready) return <Loader />
   if (!user) return <Navigate to="/login" replace />
   if (user.role !== role) {
     const home = { Admin: '/admin/dashboard', Teacher: '/teacher/dashboard', Student: '/student/dashboard', Parent: '/parent/dashboard' }[user.role]
@@ -93,6 +98,7 @@ function Loader() {
 const adminRoutes = [
   ['dashboard', AdminDashboard],
   ['students', AdminStudents],
+  ['admissions', AdminAdmissions],
   ['teachers', AdminTeachers],
   ['parents', AdminParents],
   ['classes', AdminClasses],
@@ -126,6 +132,7 @@ const teacherRoutes = [
   ['announcements', TeacherAnnouncements],
   ['messages', TeacherMessages],
   ['profile', TeacherProfile],
+  ['password', TeacherPassword],
 ]
 
 const studentRoutes = [
@@ -135,6 +142,7 @@ const studentRoutes = [
   ['timetable', StudentTimetable],
   ['attendance', StudentAttendance],
   ['results', StudentResults],
+  ['scratch-card', StudentScratchCard],
   ['assignments', StudentAssignments],
   ['exams', StudentExams],
   ['fees', StudentFees],
@@ -167,6 +175,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         {adminRoutes.map(([path, C]) => (

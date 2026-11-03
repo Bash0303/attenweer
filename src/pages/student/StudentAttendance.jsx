@@ -1,68 +1,113 @@
-import { ClipboardCheck, CalendarRange } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { CalendarCheck } from 'lucide-react'
 import PageHeader from '../../components/ui/PageHeader'
-import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
+import Badge, { statusColor } from '../../components/ui/Badge'
 import StatCard from '../../components/ui/StatCard'
 import ProgressBar from '../../components/ui/ProgressBar'
-import { attendanceData, attendanceRate } from '../../data/mock'
-
-const days = [
-  'Mon 1', 'Tue 2', 'Wed 3', 'Thu 4', 'Fri 5', 'Mon 8', 'Tue 9', 'Wed 10', 'Thu 11', 'Fri 12',
-  'Mon 15', 'Tue 16', 'Wed 17', 'Thu 18', 'Fri 19', 'Mon 22', 'Tue 23', 'Wed 24', 'Thu 25', 'Fri 26', 'Mon 29',
-]
-const status = ['P', 'P', 'P', 'P', 'L', 'P', 'P', 'P', 'P', 'L', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'A', 'P']
+import { DonutChart } from '../../components/ui/Charts'
+import { student } from '../../services/api'
+import { EmptyBlock, ErrorBlock, LoadBlock, TermSelect } from './studentUtils'
 
 export default function StudentAttendance() {
+  const [termId, setTermId] = useState('')
+  const [filter, setFilter] = useState('All')
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [reloadKey, setReloadKey] = useState(0)
+
+  useEffect(() => {
+    let cancelled = false
+
+    setLoading(true)
+    setError(null)
+
+    student.attendance(termId ? { termId } : undefined)
+      .then((res) => {
+        if (!cancelled) setData(res)
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e.message)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => { cancelled = true }
+  }, [termId, reloadKey])
+
+  const rows = useMemo(() => {
+    const records = data?.data || []
+    return filter === 'All' ? records : records.filter((record) => record.status === filter)
+  }, [data, filter])
+
+  if (loading && !data) return <LoadBlock label="Loading your attendance..." />
+  if (error) return <ErrorBlock message={error} onRetry={() => setReloadKey((key) => key + 1)} />
+
+  const stats = data?.stats || {}
+  const chart = [
+    { name: 'Present', value: stats.present || 0, color: '#10b981' },
+    { name: 'Late', value: stats.late || 0, color: '#d9a62e' },
+    { name: 'Absent', value: stats.absent || 0, color: '#ef4444' },
+  ]
+
   return (
     <div>
-      <PageHeader title="My Attendance" subtitle="Monthly attendance record — parent is automatically notified" />
+      <PageHeader
+        title="Attendance"
+        subtitle={`${data?.term || 'Current term'} • ${data?.session || ''}`}
+        actions={<TermSelect terms={data?.terms} value={termId || data?.termId} onChange={setTermId} />}
+      />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
-        <StatCard icon={ClipboardCheck} label="Attendance Rate" value={`${attendanceRate}%`} sub="excellent" tone="emerald" index={0} />
-        <StatCard icon={ClipboardCheck} label="Days Present" value={attendanceData.present} sub="this month" tone="navy" index={1} />
-        <StatCard icon={ClipboardCheck} label="Late / Absent" value={`${attendanceData.late} / ${attendanceData.absent}`} sub="review" tone="amber" index={2} />
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard icon={CalendarCheck} label="Attendance Rate" value={`${stats.rate || 0}%`} sub={`${stats.total || 0} days`} tone="emerald" index={0} />
+        <StatCard icon={CalendarCheck} label="Present" value={stats.present || 0} tone="emerald" index={1} />
+        <StatCard icon={CalendarCheck} label="Late" value={stats.late || 0} tone="gold" index={2} />
+        <StatCard icon={CalendarCheck} label="Absent" value={stats.absent || 0} tone="rose" index={3} />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="p-6 lg:col-span-2">
-          <div className="flex items-center gap-2"><CalendarRange size={18} className="text-gold-500" /><h3 className="font-bold text-navy-900">August 2026</h3></div>
-          <div className="mt-4 grid grid-cols-7 gap-2 sm:grid-cols-11">
-            {days.map((d, i) => {
-              const s = status[i]
-              const cls = s === 'P' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : s === 'L' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-rose-50 text-rose-500 border-rose-100'
-              return (
-                <div key={d} className={`rounded-xl border p-2 text-center ${cls}`}>
-                  <p className="text-[10px] leading-tight text-slate-400">{d}</p>
-                  <p className="text-sm font-extrabold">{s}</p>
-                </div>
-              )
-            })}
-          </div>
-          <div className="mt-4 flex flex-wrap gap-3 text-xs text-slate-500">
-            <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Present</span>
-            <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-amber-400" /> Late</span>
-            <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-rose-500" /> Absent</span>
-          </div>
-        </Card>
-
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <Card className="p-6">
-          <h3 className="font-bold text-navy-900">Term Overview</h3>
-          <div className="mt-4 space-y-4">
-            {[['Present', `${attendanceData.present} days`, 87], ['Late', `${attendanceData.late} days`, 10], ['Absent', `${attendanceData.absent} day`, 3]].map(([k, v, p]) => (
-              <div key={k}>
-                <div className="mb-1 flex justify-between text-sm"><span className="font-medium text-slate-600">{k}</span><span className="font-bold text-navy-900">{v}</span></div>
-                <ProgressBar value={p} color={k === 'Present' ? 'bg-emerald-500' : k === 'Late' ? 'bg-amber-400' : 'bg-rose-500'} />
+          <h3 className="font-bold text-navy-900">Term Breakdown</h3>
+          <p className="text-xs text-slate-400">Present, late and absent days</p>
+          {stats.total ? <DonutChart data={chart} height={230} centerValue={`${stats.rate || 0}%`} centerLabel="Rate" /> : <p className="mt-6 rounded-xl bg-cream-100/70 p-4 text-sm text-slate-500">No attendance records for this term.</p>}
+          <div className="mt-4 space-y-3">
+            {[['Present', stats.present, 'bg-emerald-500'], ['Late', stats.late, 'bg-gold-500'], ['Absent', stats.absent, 'bg-rose-500']].map(([label, value, color]) => (
+              <div key={label}>
+                <div className="mb-1 flex justify-between text-xs"><span className="font-semibold text-slate-600">{label}</span><span className="font-bold text-navy-900">{value || 0}</span></div>
+                <ProgressBar value={stats.total ? ((value || 0) / stats.total) * 100 : 0} color={color} />
               </div>
             ))}
           </div>
-          <div className="mt-6 rounded-xl bg-cream-100/70 p-4 text-sm">
-            <p className="font-bold text-navy-800">Class Teacher's Note</p>
-            <p className="mt-1 italic text-slate-500">"Excellent punctuality. Keep it up, John!"</p>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-navy-100 px-6 py-4">
+            <div><h3 className="font-bold text-navy-900">Daily Records</h3><p className="text-xs text-slate-400">School attendance register</p></div>
+            <div className="flex flex-wrap gap-1.5">
+              {['All', 'Present', 'Late', 'Absent'].map((status) => (
+                <button key={status} onClick={() => setFilter(status)} className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${filter === status ? 'bg-navy-800 text-white' : 'bg-navy-50 text-slate-500 hover:bg-navy-100'}`}>{status}</button>
+              ))}
+            </div>
           </div>
+          {!rows.length ? (
+            <div className="p-6"><EmptyBlock title="No records" message={filter === 'All' ? 'No attendance records are available for this term.' : `No ${filter.toLowerCase()} records for this term.`} /></div>
+          ) : (
+            <div className="divide-y divide-navy-50">
+              {rows.map((record) => (
+                <div key={record.id} className="flex items-center justify-between gap-3 px-6 py-3">
+                  <div>
+                    <p className="text-sm font-semibold text-navy-900">{record.formattedDate}</p>
+                    <p className="text-xs text-slate-400">{record.date}</p>
+                  </div>
+                  <Badge color={statusColor(record.status)} dot>{record.status}</Badge>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
-
-      <div className="mt-6 flex justify-end"><Button tone="primary"><ClipboardCheck size={15} /> View Full Term Report</Button></div>
     </div>
   )
 }

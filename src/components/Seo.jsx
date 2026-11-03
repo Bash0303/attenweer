@@ -10,6 +10,7 @@ const metas = {
   '/about': { title: `About Us | ${base}`, description: 'Established 2023, Witty Group of Schools unites Qur\'anic excellence with the Nigerian curriculum. Learn about our mission and vision.' },
   '/register': { title: `Admission Registration | ${base}`, description: 'Admissions are open for the 2025/2026 session. Register your ward at Witty Group of Schools, Ilorin.' },
   '/login': { title: `Portal Login | ${base}`, description: 'Students, parents and staff sign in to the Witty Group of Schools portal.' },
+  '/forgot-password': { title: `Reset Password | ${base}`, description: 'Reset your Witty Group of Schools portal password using a 6-digit email verification code.' },
   '/admin': { title: `Admin Portal | ${base}`, description: 'Welcome to the Witty Group of Schools administration dashboard.' },
   '/teacher': { title: `Teacher Portal | ${base}`, description: 'Welcome to the Witty Group of Schools teacher portal.' },
   '/student': { title: `Student Portal | ${base}`, description: 'Welcome to the Witty Group of Schools student portal.' },

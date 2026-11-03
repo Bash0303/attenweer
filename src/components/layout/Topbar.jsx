@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, Search, LogOut, User, ChevronDown, Menu, ClipboardList, Award, Wallet, Clock, Calendar } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import Avatar from '../ui/Avatar'
-import { notifications, school } from '../../data/mock'
+import { notifications } from '../../data/mock'
+import { admin } from '../../services/api'
 
 const iconMap = {
   clipboard: ClipboardList,
@@ -20,19 +21,77 @@ export default function Topbar({ role, onMenuClick }) {
   const [showProfile, setShowProfile] = useState(false)
   const [showNotifs, setShowNotifs] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [searching, setSearching] = useState(false)
   const notifRef = useRef(null)
   const profileRef = useRef(null)
+  const searchRef = useRef(null)
 
   useEffect(() => {
     const handler = (e) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotifs(false)
       if (profileRef.current && !profileRef.current.contains(e.target)) setShowProfile(false)
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSearch(false)
+        setSearchTerm('')
+        setSearchResults([])
+        setSearching(false)
+      }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
+  useEffect(() => {
+    if (role !== 'Admin' || !showSearch) return
+
+    const term = searchTerm.trim()
+    if (term.length < 2) {
+      setSearchResults([])
+      setSearching(false)
+      return
+    }
+
+    let active = true
+    setSearching(true)
+    const timer = setTimeout(async () => {
+      try {
+        const res = await admin.students({ search: term })
+        if (active) setSearchResults((res.data || []).slice(0, 6))
+      } catch {
+        if (active) setSearchResults([])
+      } finally {
+        if (active) setSearching(false)
+      }
+    }, 250)
+
+    return () => {
+      active = false
+      clearTimeout(timer)
+    }
+  }, [searchTerm, showSearch, role])
+
   const unread = notifications.filter((n) => !n.read).length
+
+  const closeSearch = () => {
+    setShowSearch(false)
+    setSearchTerm('')
+    setSearchResults([])
+    setSearching(false)
+  }
+
+  const runSearch = () => {
+    const term = searchTerm.trim()
+    if (!term) return
+    closeSearch()
+    navigate(`/admin/students?search=${encodeURIComponent(term)}`)
+  }
+
+  const openStudent = (student) => {
+    closeSearch()
+    navigate(`/admin/students?student=${student.id}`)
+  }
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-navy-100 bg-white/80 px-4 backdrop-blur-md sm:px-6">
@@ -40,19 +99,78 @@ export default function Topbar({ role, onMenuClick }) {
         <Menu size={22} />
       </button>
 
-      <button
-        onClick={() => setShowSearch(!showSearch)}
-        className="hidden items-center gap-2 rounded-xl border border-navy-100 bg-navy-50/50 px-3 py-2 text-sm text-slate-400 transition hover:border-navy-200 sm:flex md:w-72"
-      >
-        <Search size={16} />
-        <span className="truncate">Search students, classes, results…</span>
-      </button>
+      {role === 'Admin' && (
+        <div className="relative hidden sm:block md:w-72" ref={searchRef}>
+          <button
+            onClick={() => (showSearch ? closeSearch() : setShowSearch(true))}
+            className="flex w-full items-center gap-2 rounded-xl border border-navy-100 bg-navy-50/50 px-3 py-2 text-sm text-slate-400 transition hover:border-navy-200"
+          >
+            <Search size={16} />
+            <span className="truncate">Search students, ID or class…</span>
+          </button>
+
+          <AnimatePresence>
+            {showSearch && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                className="absolute left-0 top-full mt-2 w-80 overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-lift sm:w-96"
+              >
+                <form onSubmit={(e) => { e.preventDefault(); runSearch() }} className="flex items-center gap-2 border-b border-navy-100 px-4 py-3">
+                  <Search size={16} className="shrink-0 text-slate-400" />
+                  <input
+                    autoFocus
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Escape') closeSearch() }}
+                    placeholder="Search student name, ID or class…"
+                    className="w-full bg-transparent text-sm text-navy-900 outline-none placeholder:text-slate-400"
+                  />
+                </form>
+
+                <div className="max-h-80 overflow-y-auto">
+                  {searching && <p className="px-4 py-3 text-sm text-slate-400">Searching…</p>}
+                  {!searching && searchTerm.trim().length >= 2 && !searchResults.length && (
+                    <p className="px-4 py-3 text-sm text-slate-400">No students found.</p>
+                  )}
+                  {!searchTerm.trim() && (
+                    <p className="px-4 py-3 text-xs text-slate-400">Start typing to search student records.</p>
+                  )}
+                  {searchResults.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => openStudent(s)}
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-navy-50"
+                    >
+                      <Avatar initials={s.initials} color={s.color} size="sm" />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold text-navy-900">{s.name}</span>
+                        <span className="block truncate text-xs text-slate-400">
+                          {s.studentId} • {s.className || 'No class'}
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {searchTerm.trim() && (
+                  <button
+                    type="button"
+                    onClick={runSearch}
+                    className="w-full border-t border-navy-100 py-2.5 text-center text-xs font-semibold text-navy-700 transition hover:bg-navy-50"
+                  >
+                    View all results
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
 
       <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-        <div className="relative hidden rounded-full border border-cream-200 bg-cream-100 px-3 py-1.5 text-xs font-semibold text-navy-800 md:block">
-          {school.session} • {school.term}
-        </div>
-
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setShowNotifs(!showNotifs)}

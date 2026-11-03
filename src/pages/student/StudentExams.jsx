@@ -1,53 +1,92 @@
-import { BookMarked, CalendarDays } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { CalendarDays, ClipboardList, Clock } from 'lucide-react'
 import PageHeader from '../../components/ui/PageHeader'
 import Card from '../../components/ui/Card'
-import Badge from '../../components/ui/Badge'
-import Button from '../../components/ui/Button'
+import Badge, { statusColor } from '../../components/ui/Badge'
+import StatCard from '../../components/ui/StatCard'
+import { student } from '../../services/api'
+import { EmptyBlock, ErrorBlock, LoadBlock } from './studentUtils'
 
-const exams = [
-  { title: 'First Term Examination', date: '21 Sep 2026', time: '8:00am', status: 'Upcoming' },
-  { title: 'CA Test 2', date: '10 Sep 2026', time: '9:00am', status: 'Upcoming' },
-  { title: 'First Term Examination (Completed)', date: 'Term Complete', time: '—', status: 'Completed' },
-]
+const FILTERS = ['All', 'Scheduled', 'Completed']
 
 export default function StudentExams() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [reloadKey, setReloadKey] = useState(0)
+  const [filter, setFilter] = useState('All')
+
+  useEffect(() => {
+    let cancelled = false
+
+    setLoading(true)
+    setError(null)
+
+    student.exams()
+      .then((res) => {
+        if (!cancelled) setData(res)
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e.message)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => { cancelled = true }
+  }, [reloadKey])
+
+  const rows = useMemo(() => {
+    const exams = data?.data || []
+    return filter === 'All' ? exams : exams.filter((exam) => exam.status === filter)
+  }, [data, filter])
+
+  if (loading && !data) return <LoadBlock label="Loading your exams..." />
+  if (error) return <ErrorBlock message={error} onRetry={() => setReloadKey((key) => key + 1)} />
+
+  const stats = data?.stats || {}
+
   return (
     <div>
-      <PageHeader title="Examinations" subtitle="Examination schedule, timetables and results" actions={<Button tone="primary"><CalendarDays size={15} /> Exam Timetable</Button>} />
+      <PageHeader title="Examinations" subtitle={`${data?.student?.className || 'Your class'} exam schedule`} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div>
-          <h3 className="mb-3 font-bold text-navy-900">My Exam Schedule</h3>
-          <div className="space-y-4">
-            {exams.map((e) => (
-              <Card key={e.title} hover className="p-6">
-                <div className="flex items-start gap-4">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-navy-800 text-gold-400"><BookMarked size={20} /></span>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-navy-900">{e.title}</h4>
-                      <Badge color={e.status === 'Completed' ? 'slate' : 'amber'} dot>{e.status}</Badge>
-                    </div>
-                    <p className="mt-1 text-xs text-slate-400">{e.date} • {e.time}</p>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {['English', 'Maths', 'Physics', 'Chem', 'Bio', 'Econs', 'IRS'].map((s) => <span key={s} className="rounded-full bg-cream-100 px-2 py-0.5 text-[11px] font-semibold text-navy-700">{s}</span>)}
-                    </div>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatCard icon={ClipboardList} label="Scheduled Exams" value={stats.scheduled || 0} tone="navy" index={0} />
+        <StatCard icon={Clock} label="Completed Exams" value={stats.completed || 0} tone="emerald" index={1} />
+        <StatCard icon={CalendarDays} label="Next Exam" value={stats.nextExam || 'None'} tone="gold" index={2} />
+      </div>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {FILTERS.map((item) => (
+          <button key={item} onClick={() => setFilter(item)} className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition ${filter === item ? 'bg-navy-800 text-white' : 'bg-white text-slate-500 hover:bg-navy-50'}`}>{item}</button>
+        ))}
+      </div>
+
+      {!rows.length ? (
+        <div className="mt-6"><EmptyBlock title="No exams" message={filter === 'All' ? 'No exams have been scheduled for your class yet.' : `You have no ${filter.toLowerCase()} exams.`} /></div>
+      ) : (
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          {rows.map((exam) => (
+            <Card key={exam.id} className="p-5">
+              <div className="flex items-start gap-3">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-cream-100 text-center text-[10px] font-extrabold leading-tight text-navy-800">{exam.startDate?.split(' ')[0]}<br />{exam.startDate?.split(' ')[1]}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <h4 className="font-bold text-navy-900">{exam.title}</h4>
+                    <Badge color={statusColor(exam.status)} dot>{exam.status}</Badge>
+                  </div>
+                  <p className="text-xs text-slate-400">{exam.term} &bull; {exam.session}</p>
+                  <div className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+                    <span className="font-semibold text-navy-700">Starts: {exam.startDate}</span>
+                    <span className="font-semibold text-navy-700">Ends: {exam.endDate || '-'}</span>
+                    <span className="text-slate-400">{exam.subjectsCount || 0} subjects</span>
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
+              </div>
+            </Card>
+          ))}
         </div>
-
-        <Card className="p-6 h-fit">
-          <h3 className="font-bold text-navy-900">Examination Guidelines</h3>
-          <ul className="mt-4 space-y-3 text-sm text-slate-500">
-            {['Arrive 30 minutes before the exam.', 'Dress in full school uniform (cream shirt, navy blue trouser/skirt).', 'Candidates must present their student ID.', 'Phones and smart devices are prohibited.', 'All answers must be written in the provided answer booklet.', 'Islamic Studies exams include oral memorisation assessments.'].map((t) => (
-              <li key={t} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />{t}</li>
-            ))}
-          </ul>
-        </Card>
-      </div>
+      )}
     </div>
   )
 }

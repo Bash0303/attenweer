@@ -104,19 +104,32 @@ html {
   .animation-delay-400 { animation-delay: 400ms; }
 }
 
-/* Print styles for report card */
+/* Print styles for report cards and fee receipts */
 @media print {
   body * {
     visibility: hidden;
   }
-  #report-card, #report-card * {
+  #report-card, #report-card *, #fee-receipt, #fee-receipt * {
     visibility: visible;
   }
-  #report-card {
+  #report-card, #fee-receipt {
     position: absolute;
     inset: 0;
     width: 100%;
     box-shadow: none !important;
     border-radius: 0 !important;
+  }
+  .fixed {
+    position: static !important;
+    inset: auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .max-h-\[90vh\] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .overflow-y-auto {
+    overflow: visible !important;
   }
 }

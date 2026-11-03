@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { CheckCircle2, Upload, ChevronRight, ChevronLeft, Phone, Mail, MapPin, Loader2 } from 'lucide-react'
 import SiteNav from '../../components/layout/SiteNav'
 import SiteFooter from '../../components/layout/SiteFooter'
 import Button from '../../components/ui/Button'
-import { classes, school } from '../../data/mock'
+import { school } from '../../data/mock'
+import { admissions } from '../../services/api'
 
 const steps = ['Student Details', 'Admission & Class', 'Parent / Guardian', 'Review & Submit']
+
+const MAX_PASSPORT_BYTES = 100 * 1024
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const inputCls =
   'w-full rounded-xl border border-navy-100 bg-white px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-slate-400 outline-none transition focus:border-navy-400 focus:ring-2 focus:ring-navy-100'
@@ -26,15 +30,160 @@ export default function Register() {
   const [submitted, setSubmitted] = useState(false)
   const [appId, setAppId] = useState('')
   const [form, setForm] = useState({})
+  const [options, setOptions] = useState(null)
+  const [optionsLoading, setOptionsLoading] = useState(true)
+  const [passportFile, setPassportFile] = useState(null)
+  const [passportError, setPassportError] = useState(null)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [formError, setFormError] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const passportRef = useRef(null)
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
-  const next = () => setStep((s) => Math.min(s + 1, steps.length - 1))
-  const back = () => setStep((s) => Math.max(s - 1, 0))
+  useEffect(() => {
+    let active = true
 
-  const handleSubmit = () => {
-    setAppId('APP-' + Math.floor(2300 + Math.random() * 200))
-    setSubmitted(true)
+    admissions
+      .options()
+      .then((res) => {
+        if (!active) return
+        const data = res.data || {}
+        setOptions(data)
+        setForm((f) => ({ ...f, session: f.session || data.session || school.session }))
+      })
+      .catch(() => {
+        if (active) setOptions({ classes: [], admissionTypes: ['Fresh Intake', 'Transfer', 'Re-admission'], session: school.session })
+      })
+      .finally(() => {
+        if (active) setOptionsLoading(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const onPassport = (event) => {
+    const file = event.target.files?.[0]
+    setPassportError(null)
+
+    if (!file) {
+      setPassportFile(null)
+      return
+    }
+
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      setPassportError('Passport must be a JPG or PNG image.')
+      event.target.value = ''
+      return
+    }
+
+    if (file.size > MAX_PASSPORT_BYTES) {
+      setPassportError('Passport must be 100KB or smaller.')
+      event.target.value = ''
+      return
+    }
+
+    setPassportFile(file)
+  }
+
+  const validateStep = (current) => {
+    if (current === 0) {
+      if (!form.fullName?.trim()) return 'Enter the student full name.'
+      if (!form.dob) return 'Select the date of birth.'
+      if (!form.gender) return 'Select the gender.'
+      if (!form.phone?.trim()) return 'Enter the phone number.'
+      if (!emailPattern.test(form.email || '')) return 'Enter a valid email address.'
+      if (!form.address?.trim()) return 'Enter the home address.'
+      if (!passportFile) return 'Upload the passport photograph (JPG/PNG, max 100KB).'
+    }
+
+    if (current === 1) {
+      if (!form.classId) return 'Select the class applying to.'
+      if (!form.admissionType) return 'Select the admission type.'
+    }
+
+    if (current === 2) {
+      if (!form.parentName?.trim()) return 'Enter the parent/guardian name.'
+      if (!form.parentPhone?.trim()) return 'Enter the parent phone number.'
+    }
+
+    return null
+  }
+
+  const next = () => {
+    const error = validateStep(step)
+    if (error) {
+      setFormError(error)
+      return
+    }
+    setFormError(null)
+    setStep((s) => Math.min(s + 1, steps.length - 1))
+  }
+
+  const back = () => {
+    setFormError(null)
+    setStep((s) => Math.max(s - 1, 0))
+  }
+
+  const handleSubmit = async () => {
+    if (!termsAccepted) {
+      setFormError('Please accept the terms and conditions before submitting.')
+      return
+    }
+
+    setSubmitting(true)
+    setFormError(null)
+
+    try {
+      const payload = new FormData()
+      payload.append('fullName', form.fullName || '')
+      payload.append('email', form.email || '')
+      payload.append('phone', form.phone || '')
+      payload.append('gender', form.gender || '')
+      payload.append('dob', form.dob || '')
+      payload.append('state', form.state || '')
+      payload.append('address', form.address || '')
+      payload.append('classId', form.classId || '')
+      payload.append('admissionType', form.admissionType || '')
+      payload.append('session', form.session || options?.session || school.session)
+      payload.append('prevSchool', form.prevSchool || '')
+      payload.append('house', form.house || '')
+      payload.append('bloodGroup', form.bloodGroup || '')
+      payload.append('allergy', form.allergy || '')
+      payload.append('parentName', form.parentName || '')
+      payload.append('parentPhone', form.parentPhone || '')
+      payload.append('parentEmail', form.parentEmail || '')
+      payload.append('relation', form.relation || '')
+      payload.append('emergency', form.emergency || '')
+
+      if (passportFile) payload.append('passport', passportFile)
+
+      const res = await admissions.apply(payload)
+      setAppId(res.code || res.data?.code || '')
+      setSubmitted(true)
+      setStep(0)
+    } catch (error) {
+      setFormError(error.errors ? Object.values(error.errors).flat().join(' ') : error.message)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const classList = options?.classes || []
+  const selectedClass = classList.find((c) => String(c.id) === String(form.classId))
+  const sessionLabel = form.session || options?.session || school.session
+
+  const resetForm = () => {
+    setStep(0)
+    setForm({})
+    setPassportFile(null)
+    setPassportError(null)
+    setTermsAccepted(false)
+    setFormError(null)
+    setSubmitted(false)
+    setAppId('')
   }
 
   return (
@@ -70,13 +219,13 @@ export default function Register() {
               <p className="mt-1 text-2xl font-extrabold text-navy-900">{appId}</p>
             </div>
             <p className="mx-auto mt-6 max-w-md rounded-xl bg-cream-100 p-4 text-sm text-navy-800">
-              Once approved, a student ID and login credentials will be generated, and your ward will be assigned to their class for the {school.session} session.
+              Once approved, a student ID and login credentials will be generated and sent to your email, and your ward will be assigned to their class for the {sessionLabel} session.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link to="/login">
                 <Button tone="primary">Go to Login</Button>
               </Link>
-              <Button tone="ghost" onClick={() => { setStep(0); setForm({}); setSubmitted(false) }}>
+              <Button tone="ghost" onClick={resetForm}>
                 Register Another Student
               </Button>
             </div>
@@ -109,18 +258,30 @@ export default function Register() {
                           <option value="">Select gender</option><option>Male</option><option>Female</option>
                         </select>
                       </Field>
-                      <Field label="Phone Number *"><input className={inputCls} placeholder="080xxxxxxxxx" value={form.phone || ''} onChange={set('phone')} /></Field>
-                      <Field label="Email Address"><input className={inputCls} placeholder="you@example.com" value={form.email || ''} onChange={set('email')} /></Field>
+                      <Field label="Phone Number *"><input type="tel" className={inputCls} placeholder="080xxxxxxxxx" value={form.phone || ''} onChange={set('phone')} /></Field>
+                      <Field label="Email Address *"><input type="email" className={inputCls} placeholder="you@example.com" value={form.email || ''} onChange={set('email')} /></Field>
                       <Field label="State of Origin">
                         <select className={inputCls} value={form.state || ''} onChange={set('state')}>
                           <option value="">Select state</option><option>Kwara</option><option>Oyo</option><option>Lagos</option><option>Osun</option><option>Others</option>
                         </select>
                       </Field>
                       <Field label="Home Address *" col><input className={inputCls} placeholder="House number, street, area" value={form.address || ''} onChange={set('address')} /></Field>
-                      <Field label="Passport Photograph">
-                        <div className="flex items-center gap-3 rounded-xl border-2 border-dashed border-navy-200 bg-navy-50/40 p-3 text-sm text-slate-500 hover:border-navy-400">
-                          <Upload size={18} className="text-navy-400" /> <span>Upload passport (jpg/png, max 2MB)</span>
-                        </div>
+                      <Field label="Passport Photograph *">
+                        <input ref={passportRef} type="file" accept="image/jpeg,image/png" onChange={onPassport} className="hidden" />
+                        <button
+                          type="button"
+                          onClick={() => passportRef.current?.click()}
+                          className="flex w-full items-center gap-3 rounded-xl border-2 border-dashed border-navy-200 bg-navy-50/40 p-3 text-left text-sm text-slate-500 transition hover:border-navy-400"
+                        >
+                          <Upload size={18} className="shrink-0 text-navy-400" />
+                          <span className="truncate">{passportFile ? passportFile.name : 'Upload passport (JPG/PNG, max 100KB)'}</span>
+                        </button>
+                        {passportFile && (
+                          <span className="mt-1 block text-xs text-emerald-600">
+                            {(passportFile.size / 1024).toFixed(0)}KB selected
+                          </span>
+                        )}
+                        {passportError && <span className="mt-1 block text-xs text-rose-600">{passportError}</span>}
                       </Field>
                     </div>
                   )}
@@ -130,18 +291,23 @@ export default function Register() {
                       <Field label="Previous School"><input className={inputCls} placeholder="Name of previous school" value={form.prevSchool || ''} onChange={set('prevSchool')} /></Field>
                       <Field label="Admission Type *">
                         <select className={inputCls} value={form.admissionType || ''} onChange={set('admissionType')}>
-                          <option value="">Select type</option><option>Fresh Intake</option><option>Transfer</option><option>Re-admission</option>
+                          <option value="">Select type</option>
+                          {(options?.admissionTypes || ['Fresh Intake', 'Transfer', 'Re-admission']).map((type) => (
+                            <option key={type}>{type}</option>
+                          ))}
                         </select>
                       </Field>
                       <Field label="Class Applying To *">
-                        <select className={inputCls} value={form.className || ''} onChange={set('className')}>
-                          <option value="">Select class (Secondary)</option>
-                          {classes.map((c) => <option key={c.id}>{c.name}</option>)}
+                        <select className={inputCls} value={form.classId || ''} onChange={set('classId')} disabled={optionsLoading}>
+                          <option value="">{optionsLoading ? 'Loading classes…' : 'Select class'}</option>
+                          {classList.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                       </Field>
                       <Field label="Academic Session *">
                         <select className={inputCls} value={form.session || ''} onChange={set('session')}>
-                          <option>{school.session}</option><option>2026/2027</option>
+                          <option value={sessionLabel}>{sessionLabel}</option>
+                          {school.session !== sessionLabel && <option value={school.session}>{school.session}</option>}
+                          <option value="2026/2027">2026/2027</option>
                         </select>
                       </Field>
                       <Field label="Sports/House">
@@ -167,14 +333,16 @@ export default function Register() {
                             <option value="">Select</option><option>Father</option><option>Mother</option><option>Guardian</option>
                           </select>
                         </Field>
-                        <Field label="Parent Phone *"><input className={inputCls} placeholder="080xxxxxxxxx" value={form.parentPhone || ''} onChange={set('parentPhone')} /></Field>
-                        <Field label="Parent Email"><input className={inputCls} placeholder="parent@example.com" value={form.parentEmail || ''} onChange={set('parentEmail')} /></Field>
-                        <Field label="Emergency Contact"><input className={inputCls} placeholder="080xxxxxxxxx" value={form.emergency || ''} onChange={set('emergency')} /></Field>
+                        <Field label="Parent Phone *"><input type="tel" className={inputCls} placeholder="080xxxxxxxxx" value={form.parentPhone || ''} onChange={set('parentPhone')} /></Field>
+                        <Field label="Parent Email"><input type="email" className={inputCls} placeholder="parent@example.com" value={form.parentEmail || ''} onChange={set('parentEmail')} /></Field>
+                        <Field label="Emergency Contact"><input type="tel" className={inputCls} placeholder="080xxxxxxxxx" value={form.emergency || ''} onChange={set('emergency')} /></Field>
                       </div>
                       <h4 className="pt-2 text-sm font-bold uppercase tracking-wide text-navy-800">Medical Information (optional)</h4>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <Field label="Blood Group">
-                          <select className={inputCls}><option value="">Select</option><option>A+</option><option>O+</option><option>B+</option><option>AB+</option><option>O-</option></select>
+                          <select className={inputCls} value={form.bloodGroup || ''} onChange={set('bloodGroup')}>
+                            <option value="">Select</option><option>A+</option><option>O+</option><option>B+</option><option>AB+</option><option>O-</option>
+                          </select>
                         </Field>
                         <Field label="Allergies / Conditions"><input className={inputCls} placeholder="e.g. None" value={form.allergy || ''} onChange={set('allergy')} /></Field>
                       </div>
@@ -189,26 +357,36 @@ export default function Register() {
                           ['Student Name', form.fullName || '—'],
                           ['Date of Birth', form.dob || '—'],
                           ['Gender', form.gender || '—'],
-                          ['Class', form.className || '—'],
+                          ['Class', selectedClass?.name || '—'],
                           ['Admission Type', form.admissionType || '—'],
-                          ['Session', form.session || school.session],
+                          ['Session', sessionLabel],
                           ['Parent / Guardian', form.parentName || '—'],
                           ['Parent Phone', form.parentPhone || '—'],
+                          ['Passport', passportFile?.name || '—'],
                         ].map(([k, v]) => (
                           <div key={k} className="flex justify-between gap-4 border-b border-navy-50 pb-2 last:border-0">
                             <span className="text-slate-500">{k}</span>
-                            <span className="font-semibold text-navy-900">{v}</span>
+                            <span className="max-w-[60%] truncate text-right font-semibold text-navy-900">{v}</span>
                           </div>
                         ))}
                       </div>
                       <label className="mt-4 flex items-start gap-3 text-sm text-slate-600">
-                        <input type="checkbox" className="mt-0.5 h-4 w-4 rounded border-navy-200" />
+                        <input
+                          type="checkbox"
+                          checked={termsAccepted}
+                          onChange={(event) => setTermsAccepted(event.target.checked)}
+                          className="mt-0.5 h-4 w-4 rounded border-navy-200"
+                        />
                         <span>I confirm that the information provided is true and I agree to the school's terms and conditions, including its Islamic and moral code of conduct.</span>
                       </label>
                     </div>
                   )}
                 </motion.div>
               </AnimatePresence>
+
+              {formError && (
+                <p className="mt-5 rounded-xl bg-rose-50 px-4 py-2.5 text-sm font-medium text-rose-600">{formError}</p>
+              )}
 
               <div className="mt-8 flex items-center justify-between border-t border-navy-100 pt-5">
                 <button onClick={back} disabled={step === 0} className={`inline-flex items-center gap-1 rounded-xl px-4 py-2.5 text-sm font-semibold ${step === 0 ? 'cursor-not-allowed text-slate-300' : 'text-navy-700 hover:bg-navy-50'}`}>
@@ -217,8 +395,8 @@ export default function Register() {
                 {step < steps.length - 1 ? (
                   <Button onClick={next}>Continue <ChevronRight size={16} /></Button>
                 ) : (
-                  <Button tone="gold" onClick={handleSubmit}>
-                    <Loader2 size={16} className="animate-spin" /> Submit Application
+                  <Button tone="gold" onClick={handleSubmit} disabled={submitting}>
+                    {submitting ? <Loader2 size={16} className="animate-spin" /> : null} {submitting ? 'Submitting…' : 'Submit Application'}
                   </Button>
                 )}
               </div>

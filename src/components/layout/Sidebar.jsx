@@ -8,6 +8,7 @@ import {
   BookOpen,
   CalendarRange,
   ClipboardCheck,
+  ClipboardList,
   FileText,
   PenSquare,
   BookMarked,
@@ -34,6 +35,7 @@ export const navGroups = {
       items: [
         { to: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard },
         { to: '/admin/students', label: 'Students', icon: Users },
+        { to: '/admin/admissions', label: 'Admissions', icon: ClipboardList },
         { to: '/admin/teachers', label: 'Teachers', icon: GraduationCap },
         { to: '/admin/parents', label: 'Parents', icon: HeartHandshake },
         { to: '/admin/classes', label: 'Classes', icon: School },
@@ -133,6 +135,7 @@ export const navGroups = {
       group: 'Finance & More',
       items: [
         { to: '/student/fees', label: 'Fees', icon: Wallet },
+        { to: '/student/scratch-card', label: 'Scratch Card', icon: KeyRound },
         { to: '/student/announcements', label: 'Announcements', icon: Megaphone },
         { to: '/student/messages', label: 'Messages', icon: MessageSquare },
         { to: '/student/password', label: 'Change Password', icon: KeyRound },
@@ -226,19 +229,6 @@ export default function Sidebar({ role, onClose, collapsed, open = false }) {
         ))}
       </nav>
 
-      <div className="border-t border-white/10 p-3">
-        {!collapsed && (
-          <div className="rounded-xl bg-white/5 p-3">
-            <p className="text-[11px] text-cream-100/60">Academic Session</p>
-            <p className="text-sm font-bold text-gold-400">2025/2026 • First Term</p>
-          </div>
-        )}
-        {collapsed && (
-          <div className="mx-auto grid h-9 w-9 place-items-center rounded-xl bg-white/5 text-xs font-bold text-gold-400">
-            T1
-          </div>
-        )}
-      </div>
     </aside>
   )
 }

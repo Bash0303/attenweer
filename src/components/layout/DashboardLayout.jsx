@@ -6,9 +6,17 @@ import Topbar from './Topbar'
 import { useAuth } from '../../context/AuthContext'
 
 export default function DashboardLayout({ role, children }) {
-  const { user } = useAuth()
+  const { user, ready } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+
+  if (!ready) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-[#f4f6fb]">
+        <span className="h-10 w-10 animate-spin rounded-full border-4 border-navy-100 border-t-navy-700" />
+      </div>
+    )
+  }
 
   if (!user) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />

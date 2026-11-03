@@ -26,12 +26,41 @@ export function TableToolbar({ title, subtitle, onSearch, actions, placeholder =
   )
 }
 
-export default function DataTable({ columns, rows, rowKey, onRowClick }) {
+export default function DataTable({
+  columns,
+  rows,
+  rowKey,
+  onRowClick,
+  selectable = false,
+  selectedIds = [],
+  onSelect,
+  onSelectAll,
+}) {
+  const keyOf = (row) => String(rowKey ? row[rowKey] : rows.indexOf(row))
+  const selectedSet = new Set(selectedIds.map(String))
+  const allSelected = selectable && rows.length > 0 && rows.every((row) => selectedSet.has(keyOf(row)))
+  const someSelected = selectable && rows.some((row) => selectedSet.has(keyOf(row)))
+  const columnCount = columns.length + (selectable ? 1 : 0)
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-navy-100 bg-navy-50/50 text-xs uppercase tracking-wider text-slate-500">
+            {selectable && (
+              <th className="w-12 px-6 py-3">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  ref={(element) => {
+                    if (element) element.indeterminate = !allSelected && someSelected
+                  }}
+                  onChange={(event) => onSelectAll?.(event.target.checked, rows)}
+                  className="h-4 w-4 rounded border-navy-200 accent-navy-700"
+                  aria-label="Select all rows"
+                />
+              </th>
+            )}
             {columns.map((c) => (
               <th key={c.key} className={`px-6 py-3 font-semibold ${c.right ? 'text-right' : ''}`}>{c.label}</th>
             ))}
@@ -40,7 +69,7 @@ export default function DataTable({ columns, rows, rowKey, onRowClick }) {
         <tbody className="divide-y divide-navy-50">
           {rows.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-6 py-12 text-center text-sm text-slate-400">
+              <td colSpan={columnCount} className="px-6 py-12 text-center text-sm text-slate-400">
                 No records found.
               </td>
             </tr>
@@ -51,6 +80,17 @@ export default function DataTable({ columns, rows, rowKey, onRowClick }) {
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
                 className={`transition ${onRowClick ? 'cursor-pointer hover:bg-cream-100/40' : 'hover:bg-navy-50/40'}`}
               >
+                {selectable && (
+                  <td className="px-6 py-3.5" onClick={(event) => event.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectedSet.has(keyOf(row))}
+                      onChange={() => onSelect?.(row)}
+                      className="h-4 w-4 rounded border-navy-200 accent-navy-700"
+                      aria-label={`Select ${row.name || 'row'}`}
+                    />
+                  </td>
+                )}
                 {columns.map((c) => (
                   <td key={c.key} className={`px-6 py-3.5 ${c.right ? 'text-right' : ''}`}>
                     {c.render ? c.render(row) : row[c.key]}

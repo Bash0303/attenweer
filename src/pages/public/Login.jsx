@@ -1,32 +1,36 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ShieldCheck, Users, BookOpen, HeartHandshake, Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react'
+import { User, Lock, Eye, EyeOff, Loader2 } from 'lucide-react'
 import SiteNav from '../../components/layout/SiteNav'
 import { useAuth } from '../../context/AuthContext'
 import Button from '../../components/ui/Button'
-import { school, demoUsers } from '../../data/mock'
+import { school } from '../../data/mock'
 import logo from '../../assets/witty logo.jpeg'
 
-const roles = [
-  { key: 'admin', label: 'Admin', icon: ShieldCheck, color: 'bg-navy-700', dot: 'bg-navy-600' },
-  { key: 'teacher', label: 'Teacher', icon: BookOpen, color: 'bg-emerald-600', dot: 'bg-emerald-600' },
-  { key: 'student', label: 'Student', icon: Users, color: 'bg-navy-600', dot: 'bg-navy-600' },
-  { key: 'parent', label: 'Parent', icon: HeartHandshake, color: 'bg-gold-500', dot: 'bg-gold-500' },
+const features = [
+  ['Results & report cards', 'View and download results instantly'],
+  ['Attendance in real time', 'Parents see daily attendance'],
+  ['Fees & payments', 'Track bills and balances clearly'],
+  ['Reports & analytics', 'Powerful insights for administrators'],
 ]
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
   const [error, setError] = useState('')
-  const [demoType, setDemoType] = useState('student')
+  const [loading, setLoading] = useState(false)
 
-  const doLogin = (e) => {
+  const doLogin = async (e) => {
     e.preventDefault()
-    const res = login(email, password)
+    if (loading) return
+    setError('')
+    setLoading(true)
+    const res = await login(identifier.trim(), password)
+    setLoading(false)
     if (!res.ok) {
       setError(res.error)
       return
@@ -40,17 +44,8 @@ export default function Login() {
     navigate(dest)
   }
 
-  const quickLogin = (key) => {
-    const u = demoUsers[key]
-    login(u.email, u.password)
-    const dest = { Admin: '/admin/dashboard', Teacher: '/teacher/dashboard', Student: '/student/dashboard', Parent: '/parent/dashboard' }[u.role]
-    navigate(dest)
-  }
-
   const inputCls =
     'w-full rounded-xl border border-navy-100 bg-white py-3 pl-10 pr-10 text-sm text-navy-900 placeholder:text-slate-400 outline-none transition focus:border-navy-400 focus:ring-2 focus:ring-navy-100'
-
-  const active = roles.find((r) => r.key === demoType)
 
   return (
     <div className="min-h-screen bg-cream-50">
@@ -77,14 +72,9 @@ export default function Login() {
                 Admins, teachers, students and parents stay in sync around the same records — results, attendance, fees and reports.
               </p>
               <div className="mt-10 space-y-3 text-sm">
-                {[
-                  ['Results & report cards', 'View and download results instantly'],
-                  ['Attendance in real time', 'Parents see daily attendance'],
-                  ['Fees & payments', 'Track bills and balances clearly'],
-                  ['Reports & analytics', 'Powerful insights for administrators'],
-                ].map(([t, d]) => (
+                {features.map(([t, d]) => (
                   <div key={t} className="flex items-start gap-3 rounded-xl bg-white/5 p-3">
-                    <span className={`mt-1 h-2.5 w-2.5 rounded-full ${active.dot}`} />
+                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-gold-400" />
                     <div><p className="font-semibold">{t}</p><p className="text-cream-100/60">{d}</p></div>
                   </div>
                 ))}
@@ -96,32 +86,39 @@ export default function Login() {
             <h1 className="text-2xl font-extrabold tracking-tight text-navy-900">Welcome back 👋</h1>
             <p className="mt-1 text-sm text-slate-500">Sign in to access your {school.shortName} portal dashboard.</p>
 
-            <div className="mt-6 grid grid-cols-4 gap-2">
-              {roles.map((r) => (
-                <button
-                  key={r.key}
-                  onClick={() => { setDemoType(r.key); setError(''); setEmail(''); setPassword('') }}
-                  className={`flex flex-col items-center gap-1.5 rounded-xl border p-3 text-xs font-semibold transition ${demoType === r.key ? `border-transparent ${r.color} text-white shadow-lg` : 'border-navy-100 bg-white text-slate-500 hover:border-navy-300'}`}
-                >
-                  <r.icon size={18} />
-                  {r.label}
-                </button>
-              ))}
-            </div>
-
-            <form onSubmit={doLogin} className="mt-6 space-y-4">
+            <form onSubmit={doLogin} className="mt-8 space-y-4">
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-navy-800">Email / Username</label>
+                <label className="mb-1.5 block text-sm font-semibold text-navy-800">Email or ID Number</label>
                 <div className="relative">
-                  <Mail size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input className={inputCls} placeholder={demoUsers[demoType].email} value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <User size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    required
+                    autoComplete="username"
+                    className={inputCls}
+                    placeholder="Email, admission or staff number"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                  />
                 </div>
+                <p className="mt-1.5 text-xs text-slate-400">Students use their admission number, staff use their staff number, or sign in with email.</p>
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-navy-800">Password</label>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="block text-sm font-semibold text-navy-800">Password</label>
+                  <Link to="/forgot-password" className="text-xs font-semibold text-navy-700 hover:underline">Forgot password?</Link>
+                </div>
                 <div className="relative">
                   <Lock size={16} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input type={show ? 'text' : 'password'} className={inputCls} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <input
+                    type={show ? 'text' : 'password'}
+                    required
+                    autoComplete="current-password"
+                    className={inputCls}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                   <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-700">
                     {show ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -130,30 +127,14 @@ export default function Login() {
 
               {error && <p className="rounded-xl bg-rose-50 px-4 py-2.5 text-sm font-medium text-rose-600">{error}</p>}
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-slate-500">
-                  <input type="checkbox" className="h-4 w-4 rounded border-navy-200" /> Remember me
-                </label>
-                <button type="button" className="font-semibold text-navy-700 hover:text-navy-900">Forgot password?</button>
-              </div>
-
-              <Button type="submit" className="w-full" size="lg">Sign In</Button>
+              <Button type="submit" className="w-full" size="lg" disabled={loading}>
+                {loading ? (
+                  <span className="inline-flex items-center gap-2"><Loader2 size={16} className="animate-spin" /> Signing in…</span>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
             </form>
-
-            <div className="mt-6 rounded-2xl border border-dashed border-gold-400/50 bg-cream-100/60 p-4">
-              <div className="flex items-center gap-2 text-sm font-bold text-navy-800">
-                <KeyRound size={16} className="text-gold-600" /> Demo Login
-              </div>
-              <p className="mt-1 text-xs text-slate-500">
-                Currently selected: <strong className="text-navy-800">{active.label}</strong> — tap the button below to preview this dashboard.
-              </p>
-              <button
-                onClick={() => quickLogin(demoType)}
-                className={`mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl ${active.color} px-4 py-2.5 text-sm font-bold text-white shadow-lg transition active:scale-95`}
-              >
-                Enter {active.label} Dashboard →
-              </button>
-            </div>
 
             <p className="mt-6 text-center text-xs text-slate-400">
               New student? <Link to="/register" className="font-semibold text-navy-700">Register for admission</Link>

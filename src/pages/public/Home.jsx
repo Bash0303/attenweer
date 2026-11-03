@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
@@ -6,7 +7,8 @@ import {
 } from 'lucide-react'
 import SiteNav from '../../components/layout/SiteNav'
 import SiteFooter from '../../components/layout/SiteFooter'
-import { school, announcements, events } from '../../data/mock'
+import { school } from '../../data/mock'
+import { site } from '../../services/api'
 import heroImg from '../../assets/witty.jpeg'
 
 const blaze = (i = 0) => ({
@@ -34,6 +36,28 @@ const eventTone = {
 }
 
 export default function Home() {
+  const [announcements, setAnnouncements] = useState([])
+  const [events, setEvents] = useState([])
+  const [newsLoading, setNewsLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    Promise.allSettled([site.announcements({ limit: 4 }), site.events({ limit: 5 })])
+      .then(([announcementResult, eventResult]) => {
+        if (!active) return
+        if (announcementResult.status === 'fulfilled') setAnnouncements(announcementResult.value.data || [])
+        if (eventResult.status === 'fulfilled') setEvents(eventResult.value.data || [])
+      })
+      .finally(() => {
+        if (active) setNewsLoading(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-white">
       <SiteNav />
@@ -182,10 +206,16 @@ export default function Home() {
               <Newspaper size={20} /><h3 className="text-xl font-extrabold">News & Announcements</h3>
             </div>
             <div className="mt-6 space-y-4">
-              {announcements.slice(0, 4).map((a) => (
+              {newsLoading && (
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-cream-100/60">Loading latest updates…</p>
+              )}
+              {!newsLoading && !announcements.length && (
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-cream-100/60">No announcements yet. Check back soon.</p>
+              )}
+              {announcements.map((a) => (
                 <div key={a.id} className="rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:bg-white/10">
                   <div className="flex items-center gap-2 text-xs text-gold-400">
-                    <Megaphone size={14} /> {a.tag} • {a.date}
+                    <Megaphone size={14} /> {a.tag} • {(a.date || '').split(',')[0]}
                   </div>
                   <h4 className="mt-2 font-bold">{a.title}</h4>
                   <p className="mt-1 truncate text-sm text-cream-100/60">{a.message}</p>
@@ -198,14 +228,22 @@ export default function Home() {
               <CalendarDays size={20} /><h3 className="text-xl font-extrabold">Upcoming Events</h3>
             </div>
             <div className="mt-6 space-y-4">
+              {newsLoading && (
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-cream-100/60">Loading upcoming events…</p>
+              )}
+              {!newsLoading && !events.length && (
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-cream-100/60">No upcoming events scheduled.</p>
+              )}
               {events.map((e) => (
                 <div key={e.id} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
-                  <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${eventTone[e.type]} font-bold`}>
-                    {e.date.split(' ')[0]}
+                  <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl ${eventTone[e.type] || 'bg-navy-600'} font-bold`}>
+                    {(e.date || '').split(' ')[0] || '—'}
                   </span>
                   <div>
                     <h4 className="font-bold">{e.title}</h4>
-                    <p className="text-sm text-cream-100/60">{e.desc}</p>
+                    <p className="text-sm text-cream-100/60">
+                      {[e.description, e.location].filter(Boolean).join(' • ') || 'School event'}
+                    </p>
                   </div>
                 </div>
               ))}

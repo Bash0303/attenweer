@@ -1,95 +1,190 @@
-import { useState } from 'react'
-import { PenSquare, Upload, Download } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { CheckCircle2, Clock, Paperclip, PenSquare, Send, UploadCloud } from 'lucide-react'
 import PageHeader from '../../components/ui/PageHeader'
-import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
-import Badge from '../../components/ui/Badge'
-import ProgressBar from '../../components/ui/ProgressBar'
-import { studentAssignments } from '../../data/mock'
+import Badge, { statusColor } from '../../components/ui/Badge'
+import Button from '../../components/ui/Button'
+import Modal from '../../components/ui/Modal'
+import { student } from '../../services/api'
+import { EmptyBlock, ErrorBlock, LoadBlock, inputCls } from './studentUtils'
 
-const statusBadge = { Pending: 'amber', Submitted: 'sky', Graded: 'navy' }
+const FILTERS = ['All', 'Pending', 'Submitted', 'Graded', 'Overdue']
 
 export default function StudentAssignments() {
-  const [selected, setSelected] = useState(null)
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [reloadKey, setReloadKey] = useState(0)
+  const [filter, setFilter] = useState('All')
+  const [active, setActive] = useState(null)
+  const [answer, setAnswer] = useState('')
+  const [file, setFile] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState(null)
+  const [notice, setNotice] = useState(null)
+  const fileRef = useRef(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    setLoading(true)
+    setError(null)
+
+    student.assignments()
+      .then((res) => {
+        if (!cancelled) setData(res)
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e.message)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => { cancelled = true }
+  }, [reloadKey])
+
+  const openSubmit = (assignment) => {
+    setActive(assignment)
+    setAnswer(assignment.answer || '')
+    setFile(null)
+    setFormError(null)
+    setNotice(null)
+  }
+
+  const closeSubmit = () => {
+    if (submitting) return
+    setActive(null)
+    setFile(null)
+    setFormError(null)
+  }
+
+  const submit = async () => {
+    if (!active) return
+    if (!answer.trim() && !file) {
+      setFormError('Type your answer or attach a file before submitting.')
+      return
+    }
+
+    setSubmitting(true)
+    setFormError(null)
+
+    try {
+      const formData = new FormData()
+      if (answer.trim()) formData.append('answer', answer.trim())
+      if (file) formData.append('file', file)
+      const res = await student.submitAssignment(active.id, formData)
+      setNotice(res.message || 'Assignment submitted successfully.')
+      setActive(null)
+      setFile(null)
+      setReloadKey((key) => key + 1)
+    } catch (e) {
+      setFormError(e.errors ? Object.values(e.errors).flat().join(' ') : e.message)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (loading && !data) return <LoadBlock label="Loading your assignments..." />
+  if (error) return <ErrorBlock message={error} onRetry={() => setReloadKey((key) => key + 1)} />
+
+  const assignments = data?.data || []
+  const stats = data?.stats || {}
+  const rows = filter === 'All' ? assignments : assignments.filter((assignment) => assignment.status === filter)
 
   return (
     <div>
-      <PageHeader title="My Assignments" subtitle="View, submit and track grades on assignments" />
+      <PageHeader title="Assignments" subtitle="View tasks, submit your work and check your scores" />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          {studentAssignments.map((a) => (
-            <Card key={a.id} hover className="p-6">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="flex items-start gap-4">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-navy-800 text-gold-400"><PenSquare size={18} /></span>
-                  <div>
-                    <h3 className="font-bold text-navy-900">{a.title}</h3>
-                    <p className="text-xs text-slate-400">{a.subject} • {a.teacher}</p>
-                    <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-500">{a.desc}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <Badge color={statusBadge[a.status]} dot>{a.status}</Badge>
-                  <p className="mt-1.5 text-xs text-slate-400">Deadline: <span className="font-semibold text-navy-800">{a.deadline}</span></p>
-                </div>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                {a.score !== null ? (
-                  <>
-                    <div className="flex-1">
-                      <div className="flex justify-between text-xs"><span className="font-semibold text-navy-800">Score</span><span className="font-bold text-navy-900">{a.score}/20</span></div>
-                      <ProgressBar value={a.score / 20 * 100} color="bg-emerald-500" className="mt-1" height="h-1.5" />
-                    </div>
-                    <Button tone="outline" size="sm" onClick={() => setSelected(a)}><Download size={14} /> View Feedback</Button>
-                  </>
-                ) : a.status === 'Pending' ? (
-                  <>
-                    <div className="flex-1" />
-                    <Button tone="outline" size="sm"><Upload size={14} /> Upload File</Button>
-                    <Button tone="primary" size="sm" onClick={() => setSelected(a)}>Submit Answer</Button>
-                  </>
-                ) : (
-                  <Button tone="outline" size="sm">View Submission</Button>
-                )}
-              </div>
-            </Card>
-          ))}
-        </div>
+      {notice && <div className="mb-5 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{notice}</div>}
 
-        <Card className="p-6 h-fit">
-          <h3 className="font-bold text-navy-900">Submission Tips</h3>
-          <ul className="mt-4 space-y-3 text-sm text-slate-500">
-            {['Submit before the deadline to avoid the \'Overdue\' status.', 'Attach clear, scanned files (pdf/jpg, max 2MB).', 'Show all workings for mathematics questions.', 'For memorisation, record a clear audio clip.', 'Check your score and teacher\'s feedback after grading.'].map((t) => (
-              <li key={t} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />{t}</li>
-            ))}
-          </ul>
-          <Button className="w-full mt-5" tone="gold">View All Submissions</Button>
-        </Card>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        {[
+          ['Total', stats.total || 0],
+          ['Pending', stats.pending || 0],
+          ['Submitted', stats.submitted || 0],
+          ['Graded', stats.graded || 0],
+          ['Overdue', stats.overdue || 0],
+        ].map(([label, value]) => (
+          <Card key={label} className="p-4">
+            <p className="text-2xl font-extrabold text-navy-900">{value}</p>
+            <p className="text-xs font-medium text-slate-500">{label}</p>
+          </Card>
+        ))}
       </div>
 
-      {selected && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-navy-950/50 p-4 backdrop-blur-sm" onClick={() => setSelected(null)}>
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-lift" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-bold text-navy-900">{selected.title}</h3>
-            <p className="mt-1 text-sm text-slate-400">{selected.subject}</p>
-            <div className="mt-4 space-y-3">
-              <label className="block">
-                <span className="mb-1.5 block text-sm font-semibold text-navy-800">Your Answer</span>
-                <textarea rows={4} className="w-full rounded-xl border border-navy-100 px-3.5 py-2.5 text-sm outline-none focus:border-navy-400" placeholder="Type or paste your answer…" />
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-xl border-2 border-dashed border-navy-200 p-3 text-center text-xs text-slate-500"><Upload size={16} className="mx-auto mb-1" /> Click to upload file</div>
-                <div className="rounded-xl border-2 border-dashed border-navy-200 p-3 text-center text-xs text-slate-500"><PenSquare size={16} className="mx-auto mb-1" /> Or scan to answer</div>
-              </div>
-            </div>
-            <div className="mt-5 flex justify-end gap-2">
-              <Button tone="ghost" onClick={() => setSelected(null)}>Cancel</Button>
-              <Button tone="primary">Submit Assignment</Button>
-            </div>
-          </div>
+      <div className="mt-6 flex flex-wrap gap-2">
+        {FILTERS.map((item) => (
+          <button key={item} onClick={() => setFilter(item)} className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition ${filter === item ? 'bg-navy-800 text-white' : 'bg-white text-slate-500 hover:bg-navy-50'}`}>{item}</button>
+        ))}
+      </div>
+
+      {!rows.length ? (
+        <div className="mt-6"><EmptyBlock title="Nothing here" message={filter === 'All' ? 'No assignments have been posted for your class yet.' : `You have no ${filter.toLowerCase()} assignments.`} /></div>
+      ) : (
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          {rows.map((assignment) => {
+            const canSubmit = assignment.status === 'Pending' || assignment.status === 'Overdue'
+            return (
+              <Card key={assignment.id} className="p-5">
+                <div className="flex items-start gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-navy-800 text-gold-400"><PenSquare size={16} /></span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <h4 className="font-bold text-navy-900">{assignment.title}</h4>
+                      <Badge color={statusColor(assignment.status)} dot>{assignment.status}</Badge>
+                    </div>
+                    <p className="text-xs text-slate-400">{assignment.subject || 'General'} &middot; {assignment.teacher || 'Unassigned'}</p>
+                    {assignment.description && <p className="mt-2 text-sm leading-relaxed text-slate-500">{assignment.description}</p>}
+                    <div className="mt-3 grid gap-2 text-xs sm:grid-cols-2">
+                      <span className="flex items-center gap-1.5 font-semibold text-navy-700"><Clock size={13} /> Due {assignment.deadline || 'not set'}</span>
+                      <span className="text-slate-400">{assignment.type || 'Assignment'}</span>
+                    </div>
+                    {assignment.submittedAt && (
+                      <p className="mt-2 flex items-center gap-1.5 text-xs text-emerald-600"><CheckCircle2 size={13} /> Submitted {new Date(assignment.submittedAt).toLocaleDateString('en-GB')}</p>
+                    )}
+                    {assignment.answer && <p className="mt-2 rounded-lg bg-navy-50 p-2 text-xs text-slate-600">{assignment.answer}</p>}
+                    {(assignment.score !== null && assignment.score !== undefined) && (
+                      <p className="mt-2 text-xs font-bold text-navy-900">Score: {assignment.score}{assignment.grade ? ` (${assignment.grade})` : ''}</p>
+                    )}
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <Button tone={canSubmit ? 'primary' : 'outline'} size="sm" onClick={() => openSubmit(assignment)}>
+                        {canSubmit ? <Send size={14} /> : <CheckCircle2 size={14} />} {canSubmit ? (assignment.submissionStatus ? 'Resubmit' : 'Submit work') : 'View submission'}
+                      </Button>
+                      {assignment.file && <span className="flex items-center gap-1 text-xs text-slate-400"><Paperclip size={12} />{assignment.file}</span>}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )
+          })}
         </div>
       )}
+
+      <Modal open={Boolean(active)} onClose={closeSubmit} title={active ? `Submit: ${active.title}` : 'Submit assignment'}>
+        {active && (
+          <div className="space-y-4">
+            <p className="rounded-xl bg-cream-100/70 p-3 text-sm text-slate-600">Due {active.deadline || 'not set'} &bull; {active.subject || 'General'}</p>
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-semibold text-navy-800">Your Answer</span>
+              <textarea rows={6} value={answer} onChange={(event) => setAnswer(event.target.value)} className={inputCls} placeholder="Type your answer here..." />
+            </label>
+            <div>
+              <span className="mb-1.5 block text-sm font-semibold text-navy-800">Attachment (optional)</span>
+              <input ref={fileRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onChange={(event) => setFile(event.target.files?.[0] || null)} className="hidden" />
+              <div className="flex flex-wrap items-center gap-2">
+                <Button tone="outline" size="sm" onClick={() => fileRef.current?.click()}><UploadCloud size={14} /> Choose file</Button>
+                <span className="text-xs text-slate-400">{file ? file.name : 'PDF, DOC, DOCX, JPG or PNG up to 10MB'}</span>
+              </div>
+            </div>
+            {formError && <p className="text-sm font-medium text-rose-600">{formError}</p>}
+            <div className="flex justify-end gap-2">
+              <Button tone="ghost" onClick={closeSubmit} disabled={submitting}>Cancel</Button>
+              <Button tone="primary" onClick={submit} disabled={submitting}><Send size={15} /> {submitting ? 'Submitting...' : 'Submit'}</Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
