@@ -11,6 +11,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 22
+      - key: VITE_API_URL
+        value: https://wittyapi.latcircle.com/api
     routes:
       - type: rewrite
         source: /*
