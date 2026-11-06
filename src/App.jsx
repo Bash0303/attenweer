@@ -25,6 +25,7 @@ const AdminResults = lazy(() => import('./pages/admin/AdminResults'))
 const AdminTimetable = lazy(() => import('./pages/admin/AdminTimetable'))
 const AdminAssignments = lazy(() => import('./pages/admin/AdminAssignments'))
 const AdminExams = lazy(() => import('./pages/admin/AdminExams'))
+const AdminCbt = lazy(() => import('./pages/admin/AdminCbt'))
 const AdminFees = lazy(() => import('./pages/admin/AdminFees'))
 const AdminPayments = lazy(() => import('./pages/admin/AdminPayments'))
 const AdminAnnouncements = lazy(() => import('./pages/admin/AdminAnnouncements'))
@@ -41,6 +42,7 @@ const TeacherAttendance = lazy(() => import('./pages/teacher/TeacherAttendance')
 const TeacherAssignments = lazy(() => import('./pages/teacher/TeacherAssignments'))
 const TeacherScores = lazy(() => import('./pages/teacher/TeacherScores'))
 const TeacherExams = lazy(() => import('./pages/teacher/TeacherExams'))
+const TeacherCbt = lazy(() => import('./pages/teacher/TeacherCbt'))
 const TeacherResults = lazy(() => import('./pages/teacher/TeacherResults'))
 const TeacherTimetable = lazy(() => import('./pages/teacher/TeacherTimetable'))
 const TeacherAnnouncements = lazy(() => import('./pages/teacher/TeacherAnnouncements'))
@@ -57,6 +59,7 @@ const StudentResults = lazy(() => import('./pages/student/StudentResults'))
 const StudentScratchCard = lazy(() => import('./pages/student/StudentScratchCard'))
 const StudentAssignments = lazy(() => import('./pages/student/StudentAssignments'))
 const StudentExams = lazy(() => import('./pages/student/StudentExams'))
+const StudentCbt = lazy(() => import('./pages/student/StudentCbt'))
 const StudentFees = lazy(() => import('./pages/student/StudentFees'))
 const StudentAnnouncements = lazy(() => import('./pages/student/StudentAnnouncements'))
 const StudentMessages = lazy(() => import('./pages/student/StudentMessages'))
@@ -70,6 +73,7 @@ const ParentAttendance = lazy(() => import('./pages/parent/ParentAttendance'))
 const ParentAssignments = lazy(() => import('./pages/parent/ParentAssignments'))
 const ParentTimetable = lazy(() => import('./pages/parent/ParentTimetable'))
 const ParentExams = lazy(() => import('./pages/parent/ParentExams'))
+const ParentCbt = lazy(() => import('./pages/parent/ParentCbt'))
 const ParentFees = lazy(() => import('./pages/parent/ParentFees'))
 const ParentAnnouncements = lazy(() => import('./pages/parent/ParentAnnouncements'))
 const ParentMessages = lazy(() => import('./pages/parent/ParentMessages'))
@@ -112,6 +116,7 @@ const adminRoutes = [
   ['timetable', AdminTimetable],
   ['assignments', AdminAssignments],
   ['exams', AdminExams],
+  ['cbt', AdminCbt],
   ['fees', AdminFees],
   ['payments', AdminPayments],
   ['announcements', AdminAnnouncements],
@@ -130,6 +135,7 @@ const teacherRoutes = [
   ['assignments', TeacherAssignments],
   ['scores', TeacherScores],
   ['exams', TeacherExams],
+  ['cbt', TeacherCbt],
   ['results', TeacherResults],
   ['timetable', TeacherTimetable],
   ['announcements', TeacherAnnouncements],
@@ -148,6 +154,7 @@ const studentRoutes = [
   ['scratch-card', StudentScratchCard],
   ['assignments', StudentAssignments],
   ['exams', StudentExams],
+  ['cbt', StudentCbt],
   ['fees', StudentFees],
   ['announcements', StudentAnnouncements],
   ['messages', StudentMessages],
@@ -162,6 +169,7 @@ const parentRoutes = [
   ['assignments', ParentAssignments],
   ['timetable', ParentTimetable],
   ['exams', ParentExams],
+  ['cbt', ParentCbt],
   ['fees', ParentFees],
   ['announcements', ParentAnnouncements],
   ['messages', ParentMessages],

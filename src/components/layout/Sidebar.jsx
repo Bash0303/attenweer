@@ -23,6 +23,7 @@ import {
   Table2,
   FileSpreadsheet,
   KeyRound,
+  ListChecks,
   X,
 } from 'lucide-react'
 import { school } from '../../data/mock'
@@ -51,6 +52,7 @@ export const navGroups = {
         { to: '/admin/timetable', label: 'Timetable', icon: Table2 },
         { to: '/admin/assignments', label: 'Assignments', icon: PenSquare },
         { to: '/admin/exams', label: 'Examinations', icon: BookMarked },
+        { to: '/admin/cbt', label: 'CBT Oversight', icon: ListChecks },
       ],
     },
     {
@@ -93,6 +95,7 @@ export const navGroups = {
         { to: '/teacher/assignments', label: 'Assignments', icon: PenSquare },
         { to: '/teacher/scores', label: 'CA Scores', icon: FileSpreadsheet },
         { to: '/teacher/exams', label: 'Examinations', icon: BookMarked },
+        { to: '/teacher/cbt', label: 'CBT Centre', icon: ListChecks },
         { to: '/teacher/results', label: 'Results', icon: FileText },
         { to: '/teacher/timetable', label: 'Timetable', icon: Table2 },
       ],
@@ -129,6 +132,7 @@ export const navGroups = {
         { to: '/student/results', label: 'Results', icon: FileText },
         { to: '/student/assignments', label: 'Assignments', icon: PenSquare },
         { to: '/student/exams', label: 'Examinations', icon: BookMarked },
+        { to: '/student/cbt', label: 'CBT', icon: ListChecks },
       ],
     },
     {
@@ -158,6 +162,7 @@ export const navGroups = {
         { to: '/parent/results', label: 'Results', icon: FileText },
         { to: '/parent/assignments', label: 'Assignments', icon: PenSquare },
         { to: '/parent/exams', label: 'Examinations', icon: BookMarked },
+        { to: '/parent/cbt', label: 'CBT Results', icon: ListChecks },
       ],
     },
     {

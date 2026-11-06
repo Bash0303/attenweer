@@ -12,6 +12,7 @@ const loaders = {
   exams: parent.childExams,
   fees: parent.childFees,
   results: parent.childResults,
+  cbt: parent.childCbt,
 }
 
 export function money(value) {
