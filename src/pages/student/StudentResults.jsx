@@ -121,7 +121,7 @@ export default function StudentResults() {
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-sm font-semibold text-navy-800">Card Serial</span>
-                <input value={serial} onChange={(event) => setSerial(event.target.value)} className="w-full rounded-xl border border-navy-100 px-3.5 py-2.5 font-mono text-sm outline-none focus:border-navy-400" placeholder="WGS-..." />
+                <input value={serial} onChange={(event) => setSerial(event.target.value)} className="w-full rounded-xl border border-navy-100 px-3.5 py-2.5 font-mono text-sm outline-none focus:border-navy-400" placeholder="ATN-..." />
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-sm font-semibold text-navy-800">Scratch PIN</span>

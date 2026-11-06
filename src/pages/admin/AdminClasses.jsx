@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { School, Plus, Eye, Trash2 } from 'lucide-react'
+import { School, Plus, Eye, Pencil, Trash2 } from 'lucide-react'
 import PageHeader from '../../components/ui/PageHeader'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
@@ -26,6 +26,10 @@ export default function AdminClasses() {
   const [form, setForm] = useState(emptyForm)
   const [formError, setFormError] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [editing, setEditing] = useState(null)
+  const [editForm, setEditForm] = useState(emptyForm)
+  const [editError, setEditError] = useState(null)
+  const [editSaving, setEditSaving] = useState(false)
 
   const load = async () => {
     setLoading(true)
@@ -90,6 +94,49 @@ export default function AdminClasses() {
     }
   }
 
+  const openEdit = (row) => {
+    setEditForm({
+      name: row.name || '',
+      level: row.level || '',
+      arm: row.arm || 'A',
+      capacity: row.capacity ?? 40,
+      classTeacherId: row.classTeacherId ? String(row.classTeacherId) : '',
+      subjectIds: (row.subjects || []).map((s) => s.id),
+    })
+    setEditError(null)
+    setEditing(row)
+    setSelected(null)
+  }
+
+  const setEditField = (key) => (e) => setEditForm((f) => ({ ...f, [key]: e.target.value }))
+
+  const toggleEditSubject = (id) => setEditForm((f) => ({
+    ...f,
+    subjectIds: f.subjectIds.includes(id) ? f.subjectIds.filter((s) => s !== id) : [...f.subjectIds, id],
+  }))
+
+  const handleUpdate = async () => {
+    if (!editing) return
+    setEditSaving(true)
+    setEditError(null)
+    try {
+      await admin.updateClass(editing.id, {
+        name: editForm.name,
+        level: editForm.level,
+        arm: editForm.arm,
+        capacity: Number(editForm.capacity) || 40,
+        classTeacherId: editForm.classTeacherId ? Number(editForm.classTeacherId) : null,
+        subjectIds: editForm.subjectIds,
+      })
+      setEditing(null)
+      load()
+    } catch (e) {
+      setEditError(e.errors ? Object.values(e.errors).flat().join(' ') : e.message)
+    } finally {
+      setEditSaving(false)
+    }
+  }
+
   const handleDelete = async (row) => {
     if (!window.confirm(`Delete ${row.name}?`)) return
     try {
@@ -120,7 +167,10 @@ export default function AdminClasses() {
     ) },
     { key: 'subjects', label: 'Subjects', render: (c) => <span className="text-sm text-slate-600">{c.subjectCount ?? c.subjects?.length ?? 0} assigned</span> },
     { key: 'actions', label: '', right: true, render: (c) => (
-      <button onClick={(e) => { e.stopPropagation(); openClass(c) }} className="grid h-8 w-8 place-items-center rounded-lg text-navy-600 transition hover:bg-navy-50"><Eye size={15} /></button>
+      <div className="flex items-center justify-end gap-1">
+        <button onClick={(e) => { e.stopPropagation(); openClass(c) }} className="grid h-8 w-8 place-items-center rounded-lg text-navy-600 transition hover:bg-navy-50"><Eye size={15} /></button>
+        <button onClick={(e) => { e.stopPropagation(); openEdit(c) }} className="grid h-8 w-8 place-items-center rounded-lg text-navy-600 transition hover:bg-navy-50"><Pencil size={15} /></button>
+      </div>
     ) },
   ]
 
@@ -190,6 +240,7 @@ export default function AdminClasses() {
               </div>
             </div>
             <div className="mt-5 flex justify-end gap-2">
+              <Button tone="primary" size="sm" onClick={() => openEdit(selected)}><Pencil size={14} /> Edit Class</Button>
               <Button tone="danger" size="sm" onClick={() => handleDelete(selected)}><Trash2 size={14} /> Delete Class</Button>
             </div>
           </div>
@@ -237,6 +288,50 @@ export default function AdminClasses() {
         <div className="mt-6 flex justify-end gap-2">
           <Button tone="ghost" onClick={() => { setCreate(false); setForm(emptyForm); setFormError(null) }}>Cancel</Button>
           <Button tone="primary" disabled={saving} onClick={handleSave}>{saving ? 'Saving…' : 'Create Class'}</Button>
+        </div>
+      </Modal>
+
+      <Modal open={!!editing} onClose={() => setEditing(null)} title={`Edit Class ${editing?.name || ''}`} wide>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-navy-800">Class Name</span>
+            <input className={inputCls} value={editForm.name} onChange={setEditField('name')} />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-navy-800">Level</span>
+            <input className={inputCls} value={editForm.level} onChange={setEditField('level')} />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-navy-800">Arm</span>
+            <input className={inputCls} value={editForm.arm} onChange={setEditField('arm')} />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-semibold text-navy-800">Capacity</span>
+            <input type="number" min="1" className={inputCls} value={editForm.capacity} onChange={setEditField('capacity')} />
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="mb-1.5 block text-sm font-semibold text-navy-800">Class Teacher</span>
+            <select className={inputCls} value={editForm.classTeacherId} onChange={setEditField('classTeacherId')}>
+              <option value="">Unassigned</option>
+              {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+            </select>
+          </label>
+          <div className="block sm:col-span-2">
+            <span className="mb-2 block text-sm font-semibold text-navy-800">Subjects</span>
+            <div className="grid max-h-48 gap-2 overflow-y-auto rounded-xl border border-navy-100 p-3 sm:grid-cols-2">
+              {subjects.map((s) => (
+                <label key={s.id} className="flex items-center gap-2 text-sm text-slate-600">
+                  <input type="checkbox" checked={editForm.subjectIds.includes(s.id)} onChange={() => toggleEditSubject(s.id)} />
+                  {s.name}
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+        {editError && <p className="mt-4 rounded-xl bg-rose-50 px-4 py-2.5 text-sm font-medium text-rose-600">{editError}</p>}
+        <div className="mt-6 flex justify-end gap-2">
+          <Button tone="ghost" onClick={() => { setEditing(null); setEditError(null) }}>Cancel</Button>
+          <Button tone="primary" disabled={editSaving} onClick={handleUpdate}>{editSaving ? 'Saving…' : 'Save Changes'}</Button>
         </div>
       </Modal>
     </div>

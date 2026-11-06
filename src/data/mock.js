@@ -1,22 +1,26 @@
 export const school = {
-  name: 'Witty Group of Schools',
-  shortName: 'WGS',
-  secondaryName: 'Witty Secondary School',
-  location: 'Basin Road, Beside NHIS, Ilorin, Kwara State',
-  phones: ['0802 104 1132', '0810 894 4151'],
-  email: 'wittyacademy@gmail.com',
-  motto: 'Success in Both Worlds',
-  mottoArabic: 'الفلاح في الدارين',
-  mottoArabicPlain: 'Al-Falah fi al-Darayn',
+  name: 'Attenweer Schools',
+  shortName: 'ATN',
+  secondaryName: 'Attenweer College',
+  location: 'No. 194, beside Kwara State Television Station, Old Jebba Road, Yakuba, Ilorin East Local Government Area of Kwara State',
+  phones: ['07036179685', '09059825935'],
+  email: 'ilorinattenweercollege@gmail.com',
+  motto: 'Knowledge is Success',
+  mottoArabic: 'العلم سعادة',
+  mottoArabicPlain: "Al-Ilm Sa'adah",
   mission:
-    'To empower children of all academic and moral backgrounds through tailored guidance, while equipping parents and guardians with the counselling they need to support them.',
+    'Our mission at Attenweer Schools is to enlighten students with efficient Arabic and Western education, leading to success.',
   vision:
-    'To be a trendsetter in providing lifelong moral and academic solutions for learners of every age.',
-  uniform: { shirt: 'Cream', trouser: 'Navy Blue' },
+    'We have a culture that is modern, relevant, and inspires students to have a brighter future. We are determined in our approach to learning, are creative in our thinking, and bold in our ambitions.',
+  philosophy:
+    'We believe that education should develop both intellect and character. We combine academic excellence with strong moral and Islamic values to nurture disciplined, confident, and responsible learners prepared to succeed in life and contribute positively to society.',
+  uniform: { shirt: 'Cream', trouser: 'Green' },
   session: '2025/2026',
   term: 'First Term',
-  tagline: 'Nurturing excellence in knowledge, faith and character',
+  tagline: 'Nurturing knowledge, faith and character through Islamic and Western education',
   established: 2023,
+  founded: '18th September 2023',
+  proprietor: 'Islamic Enlightenment Foundation of Nigeria',
 }
 
 export const coreValues = [
@@ -63,24 +67,24 @@ export const subjects = [
 ]
 
 export const teachers = [
-  { id: 't1', name: 'Mr. Ismail Bello', staffId: 'WGS/T/001', gender: 'Male', phone: '08031122334', email: 'ismail.bello@wittyacademy.com', qualification: 'B.Sc. Mathematics, M.Ed', dept: 'Sciences', subjects: ['Mathematics'], classTeacher: 'SS 3A', status: 'Active', color: 'bg-navy-600', initials: 'IB' },
-  { id: 't2', name: 'Mrs. Ramat Ibrahim', staffId: 'WGS/T/002', gender: 'Female', phone: '08045566778', email: 'ramat.ibrahim@wittyacademy.com', qualification: 'B.A. English', dept: 'Arts', subjects: ['English Language'], classTeacher: 'SS 2A', status: 'Active', color: 'bg-emerald-600', initials: 'RI' },
-  { id: 't3', name: 'Mrs. Halima Yusuf', staffId: 'WGS/T/003', gender: 'Female', phone: '08089911223', email: 'halima.yusuf@wittyacademy.com', qualification: 'B.Sc. Biology', dept: 'Sciences', subjects: ['Basic Science', 'Biology'], classTeacher: 'JSS 1A', status: 'Active', color: 'bg-gold-500', initials: 'HY' },
-  { id: 't4', name: 'Mr. Adewale Ogunleye', staffId: 'WGS/T/004', gender: 'Male', phone: '08055667788', email: 'adewale.ogunleye@wittyacademy.com', qualification: 'B.Eng. Mechanical', dept: 'Technology', subjects: ['Basic Technology'], classTeacher: 'JSS 1B', status: 'Active', color: 'bg-sky-600', initials: 'AO' },
-  { id: 't5', name: 'Mrs. Grace Emmanuel', staffId: 'WGS/T/005', gender: 'Female', phone: '08022334455', email: 'grace.emmanuel@wittyacademy.com', qualification: 'B.Sc. Computer Science', dept: 'Technology', subjects: ['Computer Studies'], classTeacher: 'JSS 2A', status: 'Active', color: 'bg-violet-600', initials: 'GE' },
-  { id: 't6', name: 'Mr. Tunde Bakare', staffId: 'WGS/T/006', gender: 'Male', phone: '08077889900', email: 'tunde.bakare@wittyacademy.com', qualification: 'B.A. History', dept: 'Arts', subjects: ['Civic Education', 'Government'], classTeacher: 'JSS 2B', status: 'Active', color: 'bg-rose-600', initials: 'TB' },
-  { id: 't7', name: 'Mrs. Fatima Abdul', staffId: 'WGS/T/007', gender: 'Female', phone: '08099001122', email: 'fatima.abdul@wittyacademy.com', qualification: 'B.Sc. Sociology', dept: 'Arts', subjects: ['Social Studies'], classTeacher: 'JSS 3A', status: 'Active', color: 'bg-amber-600', initials: 'FA' },
-  { id: 't8', name: 'Mr. Samuel Ojo', staffId: 'WGS/T/008', gender: 'Male', phone: '08066778899', email: 'samuel.ojo@wittyacademy.com', qualification: 'B.Sc. Accounting', dept: 'Commercial', subjects: ['Business Studies', 'Economics'], classTeacher: 'JSS 3B', status: 'Active', color: 'bg-cyan-600', initials: 'SO' },
-  { id: 't9', name: 'Sheikh Aminu Salawu', staffId: 'WGS/T/009', gender: 'Male', phone: '08033445566', email: 'aminu.salawu@wittyacademy.com', qualification: 'B.A. Arabic & Islamic Studies', dept: 'Islamic', subjects: ['Islamic Studies'], classTeacher: '—', status: 'Active', color: 'bg-teal-700', initials: 'AS' },
-  { id: 't10', name: 'Ustaz Umar Farouk', staffId: 'WGS/T/010', gender: 'Male', phone: '08011223344', email: 'umar.farouk@wittyacademy.com', qualification: 'B.A. Arabic', dept: 'Islamic', subjects: ['Arabic Language'], classTeacher: '—', status: 'Active', color: 'bg-indigo-600', initials: 'UF' },
-  { id: 't11', name: 'Mrs. Amina Suleiman', staffId: 'WGS/T/011', gender: 'Female', phone: '08044556677', email: 'amina.suleiman@wittyacademy.com', qualification: 'B.Sc. Biology', dept: 'Sciences', subjects: ['Biology'], classTeacher: 'SS 1A', status: 'Active', color: 'bg-lime-600', initials: 'AS' },
-  { id: 't12', name: 'Mr. David Okon', staffId: 'WGS/T/012', gender: 'Male', phone: '08055443322', email: 'david.okon@wittyacademy.com', qualification: 'B.Sc. Chemistry', dept: 'Sciences', subjects: ['Chemistry'], classTeacher: 'SS 1B', status: 'Active', color: 'bg-fuchsia-600', initials: 'DO' },
-  { id: 't13', name: 'Mr. Femi Ajayi', staffId: 'WGS/T/013', gender: 'Male', phone: '08088776655', email: 'femi.ajayi@wittyacademy.com', qualification: 'B.Sc. Physics', dept: 'Sciences', subjects: ['Physics', 'Further Mathematics'], classTeacher: 'SS 2B', status: 'Active', color: 'bg-slate-700', initials: 'FA' },
-  { id: 't14', name: 'Mrs. Zainab Yusuf', staffId: 'WGS/T/014', gender: 'Female', phone: '08077665544', email: 'zainab.yusuf@wittyacademy.com', qualification: 'B.Sc. Economics', dept: 'Commercial', subjects: ['Economics'], classTeacher: 'SS 3B', status: 'Active', color: 'bg-orange-600', initials: 'ZY' },
-  { id: 't15', name: 'Mr. John Adeyemi', staffId: 'WGS/T/015', gender: 'Male', phone: '08066554433', email: 'john.adeyemi@wittyacademy.com', qualification: 'B.A. Political Science', dept: 'Arts', subjects: ['Government'], classTeacher: '—', status: 'On Leave', color: 'bg-pink-600', initials: 'JA' },
-  { id: 't16', name: 'Miss Mary Ekpo', staffId: 'WGS/T/016', gender: 'Female', phone: '08011223355', email: 'mary.ekpo@wittyacademy.com', qualification: 'B.A. English Literature', dept: 'Arts', subjects: ['Literature in English'], classTeacher: '—', status: 'Active', color: 'bg-purple-600', initials: 'ME' },
-  { id: 't17', name: 'Mrs. Sikirat Balogun', staffId: 'WGS/T/017', gender: 'Female', phone: '08099887766', email: 'sikirat.balogun@wittyacademy.com', qualification: 'B.Sc. Statistics', dept: 'Sciences', subjects: ['Further Mathematics'], classTeacher: '—', status: 'Active', color: 'bg-red-600', initials: 'SB' },
-  { id: 't18', name: 'Rev. Solomon Peters', staffId: 'WGS/T/018', gender: 'Male', phone: '08088776644', email: 'solomon.peters@wittyacademy.com', qualification: 'B.Th. Christian Religious Studies', dept: 'Arts', subjects: ['CRS'], classTeacher: '—', status: 'Active', color: 'bg-blue-700', initials: 'SP' },
+  { id: 't1', name: 'Mr. Ismail Bello', staffId: 'ATN/T/001', gender: 'Male', phone: '08031122334', email: 'ismail.bello@attenweerschools.com', qualification: 'B.Sc. Mathematics, M.Ed', dept: 'Sciences', subjects: ['Mathematics'], classTeacher: 'SS 3A', status: 'Active', color: 'bg-navy-600', initials: 'IB' },
+  { id: 't2', name: 'Mrs. Ramat Ibrahim', staffId: 'ATN/T/002', gender: 'Female', phone: '08045566778', email: 'ramat.ibrahim@attenweerschools.com', qualification: 'B.A. English', dept: 'Arts', subjects: ['English Language'], classTeacher: 'SS 2A', status: 'Active', color: 'bg-emerald-600', initials: 'RI' },
+  { id: 't3', name: 'Mrs. Halima Yusuf', staffId: 'ATN/T/003', gender: 'Female', phone: '08089911223', email: 'halima.yusuf@attenweerschools.com', qualification: 'B.Sc. Biology', dept: 'Sciences', subjects: ['Basic Science', 'Biology'], classTeacher: 'JSS 1A', status: 'Active', color: 'bg-gold-500', initials: 'HY' },
+  { id: 't4', name: 'Mr. Adewale Ogunleye', staffId: 'ATN/T/004', gender: 'Male', phone: '08055667788', email: 'adewale.ogunleye@attenweerschools.com', qualification: 'B.Eng. Mechanical', dept: 'Technology', subjects: ['Basic Technology'], classTeacher: 'JSS 1B', status: 'Active', color: 'bg-sky-600', initials: 'AO' },
+  { id: 't5', name: 'Mrs. Grace Emmanuel', staffId: 'ATN/T/005', gender: 'Female', phone: '08022334455', email: 'grace.emmanuel@attenweerschools.com', qualification: 'B.Sc. Computer Science', dept: 'Technology', subjects: ['Computer Studies'], classTeacher: 'JSS 2A', status: 'Active', color: 'bg-violet-600', initials: 'GE' },
+  { id: 't6', name: 'Mr. Tunde Bakare', staffId: 'ATN/T/006', gender: 'Male', phone: '08077889900', email: 'tunde.bakare@attenweerschools.com', qualification: 'B.A. History', dept: 'Arts', subjects: ['Civic Education', 'Government'], classTeacher: 'JSS 2B', status: 'Active', color: 'bg-rose-600', initials: 'TB' },
+  { id: 't7', name: 'Mrs. Fatima Abdul', staffId: 'ATN/T/007', gender: 'Female', phone: '08099001122', email: 'fatima.abdul@attenweerschools.com', qualification: 'B.Sc. Sociology', dept: 'Arts', subjects: ['Social Studies'], classTeacher: 'JSS 3A', status: 'Active', color: 'bg-amber-600', initials: 'FA' },
+  { id: 't8', name: 'Mr. Samuel Ojo', staffId: 'ATN/T/008', gender: 'Male', phone: '08066778899', email: 'samuel.ojo@attenweerschools.com', qualification: 'B.Sc. Accounting', dept: 'Commercial', subjects: ['Business Studies', 'Economics'], classTeacher: 'JSS 3B', status: 'Active', color: 'bg-cyan-600', initials: 'SO' },
+  { id: 't9', name: 'Sheikh Aminu Salawu', staffId: 'ATN/T/009', gender: 'Male', phone: '08033445566', email: 'aminu.salawu@attenweerschools.com', qualification: 'B.A. Arabic & Islamic Studies', dept: 'Islamic', subjects: ['Islamic Studies'], classTeacher: '—', status: 'Active', color: 'bg-teal-700', initials: 'AS' },
+  { id: 't10', name: 'Ustaz Umar Farouk', staffId: 'ATN/T/010', gender: 'Male', phone: '08011223344', email: 'umar.farouk@attenweerschools.com', qualification: 'B.A. Arabic', dept: 'Islamic', subjects: ['Arabic Language'], classTeacher: '—', status: 'Active', color: 'bg-indigo-600', initials: 'UF' },
+  { id: 't11', name: 'Mrs. Amina Suleiman', staffId: 'ATN/T/011', gender: 'Female', phone: '08044556677', email: 'amina.suleiman@attenweerschools.com', qualification: 'B.Sc. Biology', dept: 'Sciences', subjects: ['Biology'], classTeacher: 'SS 1A', status: 'Active', color: 'bg-lime-600', initials: 'AS' },
+  { id: 't12', name: 'Mr. David Okon', staffId: 'ATN/T/012', gender: 'Male', phone: '08055443322', email: 'david.okon@attenweerschools.com', qualification: 'B.Sc. Chemistry', dept: 'Sciences', subjects: ['Chemistry'], classTeacher: 'SS 1B', status: 'Active', color: 'bg-fuchsia-600', initials: 'DO' },
+  { id: 't13', name: 'Mr. Femi Ajayi', staffId: 'ATN/T/013', gender: 'Male', phone: '08088776655', email: 'femi.ajayi@attenweerschools.com', qualification: 'B.Sc. Physics', dept: 'Sciences', subjects: ['Physics', 'Further Mathematics'], classTeacher: 'SS 2B', status: 'Active', color: 'bg-slate-700', initials: 'FA' },
+  { id: 't14', name: 'Mrs. Zainab Yusuf', staffId: 'ATN/T/014', gender: 'Female', phone: '08077665544', email: 'zainab.yusuf@attenweerschools.com', qualification: 'B.Sc. Economics', dept: 'Commercial', subjects: ['Economics'], classTeacher: 'SS 3B', status: 'Active', color: 'bg-orange-600', initials: 'ZY' },
+  { id: 't15', name: 'Mr. John Adeyemi', staffId: 'ATN/T/015', gender: 'Male', phone: '08066554433', email: 'john.adeyemi@attenweerschools.com', qualification: 'B.A. Political Science', dept: 'Arts', subjects: ['Government'], classTeacher: '—', status: 'On Leave', color: 'bg-pink-600', initials: 'JA' },
+  { id: 't16', name: 'Miss Mary Ekpo', staffId: 'ATN/T/016', gender: 'Female', phone: '08011223355', email: 'mary.ekpo@attenweerschools.com', qualification: 'B.A. English Literature', dept: 'Arts', subjects: ['Literature in English'], classTeacher: '—', status: 'Active', color: 'bg-purple-600', initials: 'ME' },
+  { id: 't17', name: 'Mrs. Sikirat Balogun', staffId: 'ATN/T/017', gender: 'Female', phone: '08099887766', email: 'sikirat.balogun@attenweerschools.com', qualification: 'B.Sc. Statistics', dept: 'Sciences', subjects: ['Further Mathematics'], classTeacher: '—', status: 'Active', color: 'bg-red-600', initials: 'SB' },
+  { id: 't18', name: 'Rev. Solomon Peters', staffId: 'ATN/T/018', gender: 'Male', phone: '08088776644', email: 'solomon.peters@attenweerschools.com', qualification: 'B.Th. Christian Religious Studies', dept: 'Arts', subjects: ['CRS'], classTeacher: '—', status: 'Active', color: 'bg-blue-700', initials: 'SP' },
 ]
 
 const g = (name, opts) => ({
@@ -103,16 +107,16 @@ const g = (name, opts) => ({
 })
 
 export const students = [
-  g('Abdullahi Jimoh', { id: 'stu1', studentId: 'WGS/2025/00101', gender: 'Male', dob: '15/04/2010', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Abdullahi Jimoh Snr.', parentPhone: '08011111111', phone: '08011111112', email: 'abdullahi.jimoh@wittystudent.com', house: 'Red House', admission: '2021/2022', status: 'Active', initials: 'AJ', color: 'bg-navy-600' }),
-  g('Maryam Adeleke', { id: 'stu2', studentId: 'WGS/2025/00102', gender: 'Female', dob: '22/09/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mrs. Jane Adeleke', parentPhone: '08022222222', phone: '08022222223', email: 'maryam.adeleke@wittystudent.com', house: 'Blue House', admission: '2021/2022', status: 'Active', initials: 'MA', color: 'bg-emerald-600' }),
-  g('Majeed Olawale', { id: 'stu3', studentId: 'WGS/2025/00103', gender: 'Male', dob: '03/03/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Majeed Olawale Snr.', parentPhone: '08033333333', phone: '08033333334', email: 'majeed.olawale@wittystudent.com', house: 'Red House', admission: '2020/2021', status: 'Active', initials: 'MO', color: 'bg-gold-500' }),
-  g('Aminah Kolawole', { id: 'stu4', studentId: 'WGS/2025/00104', gender: 'Female', dob: '11/07/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. James Kolawole', parentPhone: '08044444444', phone: '08044444445', email: 'aminah.kolawole@wittystudent.com', house: 'Blue House', admission: '2022/2023', status: 'Active', initials: 'AK', color: 'bg-sky-600' }),
-  g('Aisha Mohammed', { id: 'stu5', studentId: 'WGS/2025/00105', gender: 'Female', dob: '19/12/2010', classId: 'c9', className: 'SS 2A', parentName: 'Alhaji Mohammed Saliu', parentPhone: '08055555555', phone: '08055555556', email: 'aisha.mohammed@wittystudent.com', house: 'Green House', admission: '2021/2022', status: 'Active', initials: 'AM', color: 'bg-violet-600' }),
-  g('Ibrahim Yusuf', { id: 'stu6', studentId: 'WGS/2025/00106', gender: 'Male', dob: '27/01/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Yusuf Alabi', parentPhone: '08066666666', phone: '08066666667', email: 'ibrahim.yusuf@wittystudent.com', house: 'Green House', admission: '2019/2020', status: 'Active', initials: 'IY', color: 'bg-teal-700' }),
-  g('Rukayat Okafor', { id: 'stu7', studentId: 'WGS/2025/00107', gender: 'Female', dob: '05/06/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mrs. Okafor Ngozi', parentPhone: '08077777777', phone: '08077777778', email: 'rukayat.okafor@wittystudent.com', house: 'Red House', admission: '2022/2023', status: 'Suspended', initials: 'RO', color: 'bg-rose-600' }),
-  g('Abdulhakeem Obi', { id: 'stu8', studentId: 'WGS/2025/00108', gender: 'Male', dob: '08/10/2010', classId: 'c9', className: 'SS 2A', parentName: 'Chief Obi Okonkwo', parentPhone: '08088888888', phone: '08088888889', email: 'abdulhakeem.obi@wittystudent.com', house: 'Blue House', admission: '2020/2021', status: 'Active', initials: 'AO', color: 'bg-indigo-600' }),
-  g('Zainab Bello', { id: 'stu9', studentId: 'WGS/2025/00109', gender: 'Female', dob: '14/03/2011', classId: 'c9', className: 'SS 2A', parentName: 'Alhaja Bello Sadiat', parentPhone: '08099999999', phone: '08099999990', email: 'zainab.bello@wittystudent.com', house: 'Green House', admission: '2021/2022', status: 'Active', initials: 'ZB', color: 'bg-amber-600' }),
-  g('Uthman Adeyemi', { id: 'stu10', studentId: 'WGS/2025/00110', gender: 'Male', dob: '29/05/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Adeyemi Uthman', parentPhone: '08101010101', phone: '08101010102', email: 'uthman.adeyemi@wittystudent.com', house: 'Red House', admission: '2022/2023', status: 'Active', initials: 'UA', color: 'bg-cyan-600' }),
+  g('Abdullahi Jimoh', { id: 'stu1', studentId: 'ATN/2025/00101', gender: 'Male', dob: '15/04/2010', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Abdullahi Jimoh Snr.', parentPhone: '08011111111', phone: '08011111112', email: 'abdullahi.jimoh@attenweerstudent.com', house: 'Red House', admission: '2021/2022', status: 'Active', initials: 'AJ', color: 'bg-navy-600' }),
+  g('Maryam Adeleke', { id: 'stu2', studentId: 'ATN/2025/00102', gender: 'Female', dob: '22/09/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mrs. Jane Adeleke', parentPhone: '08022222222', phone: '08022222223', email: 'maryam.adeleke@attenweerstudent.com', house: 'Blue House', admission: '2021/2022', status: 'Active', initials: 'MA', color: 'bg-emerald-600' }),
+  g('Majeed Olawale', { id: 'stu3', studentId: 'ATN/2025/00103', gender: 'Male', dob: '03/03/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Majeed Olawale Snr.', parentPhone: '08033333333', phone: '08033333334', email: 'majeed.olawale@attenweerstudent.com', house: 'Red House', admission: '2020/2021', status: 'Active', initials: 'MO', color: 'bg-gold-500' }),
+  g('Aminah Kolawole', { id: 'stu4', studentId: 'ATN/2025/00104', gender: 'Female', dob: '11/07/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. James Kolawole', parentPhone: '08044444444', phone: '08044444445', email: 'aminah.kolawole@attenweerstudent.com', house: 'Blue House', admission: '2022/2023', status: 'Active', initials: 'AK', color: 'bg-sky-600' }),
+  g('Aisha Mohammed', { id: 'stu5', studentId: 'ATN/2025/00105', gender: 'Female', dob: '19/12/2010', classId: 'c9', className: 'SS 2A', parentName: 'Alhaji Mohammed Saliu', parentPhone: '08055555555', phone: '08055555556', email: 'aisha.mohammed@attenweerstudent.com', house: 'Green House', admission: '2021/2022', status: 'Active', initials: 'AM', color: 'bg-violet-600' }),
+  g('Ibrahim Yusuf', { id: 'stu6', studentId: 'ATN/2025/00106', gender: 'Male', dob: '27/01/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Yusuf Alabi', parentPhone: '08066666666', phone: '08066666667', email: 'ibrahim.yusuf@attenweerstudent.com', house: 'Green House', admission: '2019/2020', status: 'Active', initials: 'IY', color: 'bg-teal-700' }),
+  g('Rukayat Okafor', { id: 'stu7', studentId: 'ATN/2025/00107', gender: 'Female', dob: '05/06/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mrs. Okafor Ngozi', parentPhone: '08077777777', phone: '08077777778', email: 'rukayat.okafor@attenweerstudent.com', house: 'Red House', admission: '2022/2023', status: 'Suspended', initials: 'RO', color: 'bg-rose-600' }),
+  g('Abdulhakeem Obi', { id: 'stu8', studentId: 'ATN/2025/00108', gender: 'Male', dob: '08/10/2010', classId: 'c9', className: 'SS 2A', parentName: 'Chief Obi Okonkwo', parentPhone: '08088888888', phone: '08088888889', email: 'abdulhakeem.obi@attenweerstudent.com', house: 'Blue House', admission: '2020/2021', status: 'Active', initials: 'AO', color: 'bg-indigo-600' }),
+  g('Zainab Bello', { id: 'stu9', studentId: 'ATN/2025/00109', gender: 'Female', dob: '14/03/2011', classId: 'c9', className: 'SS 2A', parentName: 'Alhaja Bello Sadiat', parentPhone: '08099999999', phone: '08099999990', email: 'zainab.bello@attenweerstudent.com', house: 'Green House', admission: '2021/2022', status: 'Active', initials: 'ZB', color: 'bg-amber-600' }),
+  g('Uthman Adeyemi', { id: 'stu10', studentId: 'ATN/2025/00110', gender: 'Male', dob: '29/05/2011', classId: 'c9', className: 'SS 2A', parentName: 'Mr. Adeyemi Uthman', parentPhone: '08101010101', phone: '08101010102', email: 'uthman.adeyemi@attenweerstudent.com', house: 'Red House', admission: '2022/2023', status: 'Active', initials: 'UA', color: 'bg-cyan-600' }),
 ]
 
 export const guardians = [
@@ -183,12 +187,12 @@ export const feeStructure = {
 export const totalFees = Object.values(feeStructure).reduce((a, b) => a + b, 0)
 
 export const payments = [
-  { id: 'PAY-1045', student: 'Abdullahi Jimoh', studentId: 'WGS/2025/00101', amount: 100000, purpose: 'Tuition', date: '12 Aug 2026', method: 'Bank Transfer', ref: 'TXN-88472', status: 'Verified' },
-  { id: 'PAY-1046', student: 'Maryam Adeleke', studentId: 'WGS/2025/00102', amount: 50000, purpose: 'Tuition', date: '13 Aug 2026', method: 'Card', ref: 'TXN-88473', status: 'Verified' },
-  { id: 'PAY-1047', student: 'Majeed Olawale', studentId: 'WGS/2025/00103', amount: 185000, purpose: 'Full Fees', date: '14 Aug 2026', method: 'Bank Transfer', ref: 'TXN-88474', status: 'Pending' },
-  { id: 'PAY-1048', student: 'Aisha Mohammed', studentId: 'WGS/2025/00105', amount: 35000, purpose: 'Development Levy', date: '14 Aug 2026', method: 'POS', ref: 'TXN-88475', status: 'Verified' },
-  { id: 'PAY-1049', student: 'Abdulhakeem Obi', studentId: 'WGS/2025/00108', amount: 20000, purpose: 'ICT Levy', date: '14 Aug 2026', method: 'Cash', ref: 'TXN-88476', status: 'Verified' },
-  { id: 'PAY-1050', student: 'Aminah Kolawole', studentId: 'WGS/2025/00104', amount: 185000, purpose: 'Full Fees', date: '14 Aug 2026', method: 'Bank Transfer', ref: 'TXN-88477', status: 'Failed' },
+  { id: 'PAY-1045', student: 'Abdullahi Jimoh', studentId: 'ATN/2025/00101', amount: 100000, purpose: 'Tuition', date: '12 Aug 2026', method: 'Bank Transfer', ref: 'TXN-88472', status: 'Verified' },
+  { id: 'PAY-1046', student: 'Maryam Adeleke', studentId: 'ATN/2025/00102', amount: 50000, purpose: 'Tuition', date: '13 Aug 2026', method: 'Card', ref: 'TXN-88473', status: 'Verified' },
+  { id: 'PAY-1047', student: 'Majeed Olawale', studentId: 'ATN/2025/00103', amount: 185000, purpose: 'Full Fees', date: '14 Aug 2026', method: 'Bank Transfer', ref: 'TXN-88474', status: 'Pending' },
+  { id: 'PAY-1048', student: 'Aisha Mohammed', studentId: 'ATN/2025/00105', amount: 35000, purpose: 'Development Levy', date: '14 Aug 2026', method: 'POS', ref: 'TXN-88475', status: 'Verified' },
+  { id: 'PAY-1049', student: 'Abdulhakeem Obi', studentId: 'ATN/2025/00108', amount: 20000, purpose: 'ICT Levy', date: '14 Aug 2026', method: 'Cash', ref: 'TXN-88476', status: 'Verified' },
+  { id: 'PAY-1050', student: 'Aminah Kolawole', studentId: 'ATN/2025/00104', amount: 185000, purpose: 'Full Fees', date: '14 Aug 2026', method: 'Bank Transfer', ref: 'TXN-88477', status: 'Failed' },
 ]
 
 export const announcements = [
@@ -317,10 +321,10 @@ export const adminStats = {
 }
 
 export const demoUsers = {
-  admin: { email: 'admin@wittyacademy.com', password: 'admin123', name: 'Alhaji Abdul Kareem', role: 'Admin', initials: 'AK', color: 'bg-navy-700' },
-  teacher: { email: 'teacher@wittyacademy.com', password: 'teacher123', name: 'Mrs. Ramat Ibrahim', role: 'Teacher', initials: 'RI', color: 'bg-emerald-600' },
-  student: { email: 'student@wittyacademy.com', password: 'student123', name: 'Abdullahi Jimoh', role: 'Student', initials: 'AJ', color: 'bg-navy-600' },
-  parent: { email: 'parent@wittyacademy.com', password: 'parent123', name: 'Mr. Abdullahi Jimoh Snr.', role: 'Parent', initials: 'AJ', color: 'bg-gold-500' },
+  admin: { email: 'admin@attenweerschools.com', password: 'admin123', name: 'Alhaji Abdul Kareem', role: 'Admin', initials: 'AK', color: 'bg-navy-700' },
+  teacher: { email: 'teacher@attenweerschools.com', password: 'teacher123', name: 'Mrs. Ramat Ibrahim', role: 'Teacher', initials: 'RI', color: 'bg-emerald-600' },
+  student: { email: 'student@attenweerschools.com', password: 'student123', name: 'Abdullahi Jimoh', role: 'Student', initials: 'AJ', color: 'bg-navy-600' },
+  parent: { email: 'parent@attenweerschools.com', password: 'parent123', name: 'Mr. Abdullahi Jimoh Snr.', role: 'Parent', initials: 'AJ', color: 'bg-gold-500' },
 }
 
 export const staffAttendance = [

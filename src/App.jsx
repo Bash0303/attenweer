@@ -5,6 +5,9 @@ import Seo from './components/Seo'
 
 const Home = lazy(() => import('./pages/public/Home'))
 const About = lazy(() => import('./pages/public/About'))
+const Admission = lazy(() => import('./pages/public/Admission'))
+const Gallery = lazy(() => import('./pages/public/Gallery'))
+const Contact = lazy(() => import('./pages/public/Contact'))
 const Register = lazy(() => import('./pages/public/Register'))
 const Login = lazy(() => import('./pages/public/Login'))
 const ForgotPassword = lazy(() => import('./pages/public/ForgotPassword'))
@@ -173,8 +176,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/admission" element={<Admission />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/e-exam" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />

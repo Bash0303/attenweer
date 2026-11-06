@@ -368,13 +368,13 @@ export default function AdminResults() {
           </style>
         </head>
         <body>
-          <h1>Witty Academy</h1>
+          <h1>Attenweer Schools</h1>
           <h2>${preview.className} - ${preview.subject} - ${preview.term} ${preview.session ? `(${preview.session})` : ''}</h2>
           <table>
             <thead><tr><th>Pos</th><th>Student</th><th>First CA</th><th>Second CA</th><th>Exam</th><th>Total</th><th>Grade</th><th>Remark</th></tr></thead>
             <tbody>${body}</tbody>
           </table>
-          <p class="footer">Printed from Witty Academy School Management System</p>
+          <p class="footer">Printed from Attenweer Schools School Management System</p>
           <script>window.onload = () => { window.print(); }</script>
         </body>
       </html>`)
@@ -422,7 +422,7 @@ export default function AdminResults() {
           </style>
         </head>
         <body>
-          <h1>${school.name || 'Witty Academy'}</h1>
+          <h1>${school.name || 'Attenweer Schools'}</h1>
           <h2>${compiledData.term?.name || ''} ${compiledData.term?.session ? `(${compiledData.term.session})` : ''} - Student Report Card</h2>
           <div class="meta">
             <div><span>Student</span><strong>${studentRow.name}</strong></div>
@@ -439,7 +439,7 @@ export default function AdminResults() {
             <div><span>Average</span><strong>${summary.average}% (${summary.grade || '-'})</strong></div>
             <div><span>Position</span><strong>${summary.position || 'N/A'} of ${summary.classSize || '-'}</strong></div>
           </div>
-          <p class="footer">Printed from ${school.name || 'Witty Academy'} School Management System</p>
+          <p class="footer">Printed from ${school.name || 'Attenweer Schools'} School Management System</p>
           <script>window.onload = () => { window.print(); }</script>
         </body>
       </html>`)

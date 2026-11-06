@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { school } from '../../data/mock'
-import logo from '../../assets/witty logo.jpeg'
+import logo from '../../assets/atenweer logo .png'
 
 export default function SiteFooter() {
   return (
@@ -12,7 +12,7 @@ export default function SiteFooter() {
             <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-white/10">
               <img src={logo} alt={`${school.name} logo`} className="h-9 w-9 object-contain" />
             </span>
-            <span className="text-lg font-extrabold">Witty Group of Schools</span>
+            <span className="text-lg font-extrabold">Attenweer Schools</span>
           </div>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-cream-100/70">
             {school.mission}
@@ -27,10 +27,13 @@ export default function SiteFooter() {
             {[
               ['Home', '/'],
               ['About Us', '/about'],
-              ['Student Registration', '/register'],
-              ['Portal Login', '/login'],
+              ['Admission', '/admission'],
+              ['Portal', '/login'],
+              ['e-Exam', '/e-exam'],
+              ['Gallery', '/gallery'],
+              ['Contact', '/contact'],
             ].map(([label, to]) => (
-              <li key={to}>
+              <li key={label}>
                 <Link to={to} className="text-cream-100/70 transition hover:text-white">
                   {label}
                 </Link>

@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { Printer, Download } from 'lucide-react'
 import { school } from '../../data/mock'
 import Button from '../ui/Button'
-import logo from '../../assets/witty logo.jpeg'
+import logo from '../../assets/atenweer logo .png'
 
 const gradeColor = {
   A: 'bg-emerald-50 text-emerald-600',

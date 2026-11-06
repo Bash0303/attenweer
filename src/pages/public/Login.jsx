@@ -6,7 +6,7 @@ import SiteNav from '../../components/layout/SiteNav'
 import { useAuth } from '../../context/AuthContext'
 import Button from '../../components/ui/Button'
 import { school } from '../../data/mock'
-import logo from '../../assets/witty logo.jpeg'
+import logo from '../../assets/atenweer logo .png'
 
 const features = [
   ['Results & report cards', 'View and download results instantly'],
@@ -63,7 +63,7 @@ export default function Login() {
             />
             <div className="relative">
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-gold-400">
-                <img src={logo} alt={`${school.name} logo`} className="h-7 w-7 rounded-lg object-contain" /> {school.shortName} Portal
+                <img src={logo} alt={`${school.name} logo`} className="h-7 w-7 rounded-lg object-contain" /> Attenweer Portal
               </span>
               <h2 className="mt-4 text-3xl font-extrabold leading-tight">
                 One Account.<br />One Student.<br /><span className="text-gold-400">Connected.</span>
@@ -84,7 +84,7 @@ export default function Login() {
 
           <div className="p-8 sm:p-10">
             <h1 className="text-2xl font-extrabold tracking-tight text-navy-900">Welcome back 👋</h1>
-            <p className="mt-1 text-sm text-slate-500">Sign in to access your {school.shortName} portal dashboard.</p>
+            <p className="mt-1 text-sm text-slate-500">Sign in to access your Attenweer Schools portal dashboard.</p>
 
             <form onSubmit={doLogin} className="mt-8 space-y-4">
               <div>

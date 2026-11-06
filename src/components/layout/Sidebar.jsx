@@ -26,7 +26,7 @@ import {
   X,
 } from 'lucide-react'
 import { school } from '../../data/mock'
-import logo from '../../assets/witty logo.jpeg'
+import logo from '../../assets/atenweer logo .png'
 
 export const navGroups = {
   Admin: [
@@ -186,7 +186,7 @@ export default function Sidebar({ role, onClose, collapsed, open = false }) {
         </span>
         {!collapsed && (
           <div className="min-w-0">
-            <p className="truncate text-sm font-bold">Witty Group</p>
+            <p className="truncate text-sm font-bold">Attenweer Schools</p>
             <p className="truncate text-[11px] text-cream-100/60">{role} Portal</p>
           </div>
         )}

@@ -1,27 +1,31 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-const base = 'Witty Group of Schools'
-const site = 'https://wittyacademy.com'
-const logo = `${site}/logo.jpeg`
+const base = 'Attenweer Schools'
+const site = 'https://attenweerschools.com'
+const logo = `${site}/logo.png`
 
 const metas = {
-  '/': { title: `${base} | Secondary School Portal — Ilorin`, description: 'Islamic and Western academy — Success in both Worlds. Basin Road, Beside NHIS, Ilorin, Kwara State.' },
-  '/about': { title: `About Us | ${base}`, description: 'Established 2023, Witty Group of Schools unites Qur\'anic excellence with the Nigerian curriculum. Learn about our mission and vision.' },
-  '/register': { title: `Admission Registration | ${base}`, description: 'Admissions are open for the 2025/2026 session. Register your ward at Witty Group of Schools, Ilorin.' },
-  '/login': { title: `Portal Login | ${base}`, description: 'Students, parents and staff sign in to the Witty Group of Schools portal.' },
-  '/forgot-password': { title: `Reset Password | ${base}`, description: 'Reset your Witty Group of Schools portal password using a 6-digit email verification code.' },
-  '/admin': { title: `Admin Portal | ${base}`, description: 'Welcome to the Witty Group of Schools administration dashboard.' },
-  '/teacher': { title: `Teacher Portal | ${base}`, description: 'Welcome to the Witty Group of Schools teacher portal.' },
-  '/student': { title: `Student Portal | ${base}`, description: 'Welcome to the Witty Group of Schools student portal.' },
-  '/parent': { title: `Parent Portal | ${base}`, description: 'Welcome to the Witty Group of Schools parent portal.' },
+  '/': { title: `${base} | Islamic & Western Education — Ilorin`, description: 'Attenweer Schools — Knowledge is Success. A co-educational Islamic and Western institution at Old Jebba Road, Yakuba, Ilorin, Kwara State.' },
+  '/about': { title: `About Us | ${base}`, description: 'Established 18th September 2023, Attenweer Schools nurtures knowledgeable, morally upright and confident learners through Islamic and Western education.' },
+  '/admission': { title: `Admission | ${base}`, description: 'Admissions are open for the 2025/2026 session. Learn about our admission process, available classes and requirements at Attenweer Schools, Ilorin.' },
+  '/gallery': { title: `Gallery | ${base}`, description: 'Explore moments of learning, faith and growth at Attenweer Schools, Ilorin.' },
+  '/contact': { title: `Contact Us | ${base}`, description: 'Contact Attenweer Schools at No. 194, beside Kwara State Television Station, Old Jebba Road, Yakuba, Ilorin, Kwara State.' },
+  '/register': { title: `Admission Registration | ${base}`, description: 'Admissions are open for the 2025/2026 session. Register your ward at Attenweer Schools, Ilorin.' },
+  '/login': { title: `Portal Login | ${base}`, description: 'Students, parents and staff sign in to the Attenweer Schools portal.' },
+  '/e-exam': { title: `e-Exam Portal | ${base}`, description: 'Sign in to the Attenweer Schools e-Exam portal.' },
+  '/forgot-password': { title: `Reset Password | ${base}`, description: 'Reset your Attenweer Schools portal password using a 6-digit email verification code.' },
+  '/admin': { title: `Admin Portal | ${base}`, description: 'Welcome to the Attenweer Schools administration dashboard.' },
+  '/teacher': { title: `Teacher Portal | ${base}`, description: 'Welcome to the Attenweer Schools teacher portal.' },
+  '/student': { title: `Student Portal | ${base}`, description: 'Welcome to the Attenweer Schools student portal.' },
+  '/parent': { title: `Parent Portal | ${base}`, description: 'Welcome to the Attenweer Schools parent portal.' },
 }
 
 function titleFor(pathname) {
   const exact = metas[pathname]
   if (exact) return exact
   const role = pathname.startsWith('/admin') ? '/admin' : pathname.startsWith('/teacher') ? '/teacher' : pathname.startsWith('/student') ? '/student' : pathname.startsWith('/parent') ? '/parent' : null
-  return role ? metas[role] : { title: `${base} | Secondary School Portal — Ilorin`, description: 'Witty Group of Schools — Islamic and Western education in Ilorin.' }
+  return role ? metas[role] : { title: `${base} | Islamic & Western Education — Ilorin`, description: 'Attenweer Schools — Islamic and Western education in Ilorin.' }
 }
 
 export default function Seo() {

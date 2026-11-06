@@ -10,7 +10,7 @@ export default function FeeReceipt({ student, school, term, session, receipt, st
     <div id="fee-receipt" className="bg-white p-6 text-navy-900 sm:p-8">
       <div className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-navy-800 pb-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-600">{school?.name || 'Witty Academy'}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold-600">{school?.name || 'Attenweer Schools'}</p>
           <h2 className="mt-1 text-xl font-extrabold text-navy-900">{isStatement ? 'Fee Payment Statement' : 'Payment Receipt'}</h2>
           {school?.location && <p className="mt-0.5 text-xs text-slate-500">{school.location}</p>}
           {school?.motto && <p className="text-xs italic text-slate-400">{school.motto}</p>}
@@ -119,7 +119,7 @@ export default function FeeReceipt({ student, school, term, session, receipt, st
       )}
 
       <div className="mt-6 flex items-end justify-between border-t border-navy-100 pt-4 text-[10px] text-slate-400">
-        <p>{school?.name || 'Witty Academy'} • {school?.mottoArabicPlain || ''}</p>
+        <p>{school?.name || 'Attenweer Schools'} • {school?.mottoArabicPlain || ''}</p>
         <p>Generated {new Date().toLocaleString('en-GB')}</p>
       </div>
     </div>

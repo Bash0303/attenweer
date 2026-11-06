@@ -196,10 +196,10 @@ export default function Register() {
         />
         <div className="relative mx-auto max-w-3xl px-6 text-center">
           <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-extrabold sm:text-4xl">
-            Student Registration
+            Admission Registration
           </motion.h1>
           <p className="mt-3 text-cream-100/70">
-            Apply for admission into {school.secondaryName}. Our admin team will review and approve your application.
+            Apply for admission into {school.name}. Our admin team will review and approve your application.
           </p>
         </div>
       </section>

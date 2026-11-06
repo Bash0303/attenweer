@@ -474,7 +474,7 @@ export default function AdminStudents() {
               <input className={inputCls} placeholder="e.g. 2026/2027" value={form.session} onChange={setField('session')} />
             )}
             <span className="mt-1 block text-xs text-slate-400">
-              Admission number is generated per class and year, e.g. WGS/{String(form.session || '').slice(0, 4) || '2026'}/{String(classes.find((c) => String(c.id) === String(form.classId))?.name || 'JSS1A').replace(/[^a-zA-Z0-9]/g, '').toUpperCase()}/001
+              Admission number is generated per class and year, e.g. ATN/{String(form.session || '').slice(0, 4) || '2026'}/{String(classes.find((c) => String(c.id) === String(form.classId))?.name || 'JSS1A').replace(/[^a-zA-Z0-9]/g, '').toUpperCase()}/001
             </span>
           </label>
           <label className="block">

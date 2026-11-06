@@ -5,26 +5,26 @@
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "Amiri", serif;
 
-  --color-navy-50: #eef2fb;
-  --color-navy-100: #dbe4f5;
-  --color-navy-200: #b9c9e9;
-  --color-navy-300: #8ea6d8;
-  --color-navy-400: #5f7fc3;
-  --color-navy-500: #3b5fab;
-  --color-navy-600: #2a478e;
-  --color-navy-700: #223a73;
-  --color-navy-800: #1a2c55;
-  --color-navy-900: #142038;
-  --color-navy-950: #0c1325;
+  --color-navy-50: #eef8f1;
+  --color-navy-100: #d9efdf;
+  --color-navy-200: #b4dfc1;
+  --color-navy-300: #86c99b;
+  --color-navy-400: #4faa70;
+  --color-navy-500: #2f8b55;
+  --color-navy-600: #227345;
+  --color-navy-700: #1b5c38;
+  --color-navy-800: #15492d;
+  --color-navy-900: #113b26;
+  --color-navy-950: #082416;
 
   --color-cream-50: #fdfcf9;
-  --color-cream-100: #faf6ec;
-  --color-cream-200: #f2ead6;
-  --color-cream-300: #e8dcb8;
+  --color-cream-100: #f7f6ec;
+  --color-cream-200: #efedda;
+  --color-cream-300: #e2dfc2;
 
-  --color-gold-400: #d9a62e;
-  --color-gold-500: #c08d1f;
-  --color-gold-600: #a0761a;
+  --color-gold-400: #f0a35f;
+  --color-gold-500: #e67f39;
+  --color-gold-600: #c96726;
 
   --color-emerald-500: #10b981;
   --color-emerald-600: #059669;
@@ -45,8 +45,8 @@ html {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: #f4f6fb;
-  color: #1a2c55;
+  background-color: #f4f8f5;
+  color: #15492d;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -64,19 +64,19 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c3cde4;
+  background: #b4dfc1;
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8ea6d8;
+  background: #86c99b;
   background-clip: padding-box;
 }
 
 /* Utility helpers used across dashboards */
 .chart-tooltip {
-  background: rgb(20 32 56 / 0.92);
+  background: rgb(17 59 38 / 0.92);
   color: #fff;
   border-radius: 10px;
   padding: 8px 12px;
@@ -86,7 +86,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(120deg, #2a478e, #5f7fc3 55%, #d9a62e);
+  background: linear-gradient(120deg, #227345, #4faa70 55%, #e67f39);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

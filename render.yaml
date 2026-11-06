@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: witty-school
+    name: attenweer-school
     runtime: static
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist

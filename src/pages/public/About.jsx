@@ -11,11 +11,22 @@ const fadeUp = (i = 0) => ({
   transition: { duration: 0.5, delay: i * 0.08 },
 })
 
-const management = [
-  { name: 'Alhaji Abdul Kareem', role: 'Proprietor', quote: 'Education is the bridge between faith and the future.' },
-  { name: 'Mrs. Aisha Adebayo', role: 'Principal, Secondary School', quote: 'Every child carries a unique gift; we help it shine.' },
-  { name: 'Alhaja Safiyyah Bello', role: 'Head of Administration', quote: 'Order, discipline and care — the heartbeat of our school.' },
-  { name: 'Mr. Oluwaseun Adeyemi', role: 'Director of Studies', quote: 'We teach minds today, and build leaders for tomorrow.' },
+const leadership = [
+  {
+    name: 'Abdullah Ibrahim Shege',
+    role: 'Director General, Attenweer Schools',
+    quote: 'All children are precious and unique, and education is the best way to ensure each and every one of them achieves the very best that they are capable of.',
+  },
+  {
+    name: 'Islamic Enlightenment Foundation of Nigeria',
+    role: 'Founding Organisation',
+    quote: 'A registered non-governmental organization dedicated to educational development and moral reorientation.',
+  },
+  {
+    name: 'Attenweer Schools',
+    role: 'Established 18th September 2023',
+    quote: 'Providing quality education at subsidized fees, ensuring accessibility for both the rich and the poor within the society.',
+  },
 ]
 
 export default function About() {
@@ -25,17 +36,18 @@ export default function About() {
 
       <section className="relative overflow-hidden bg-navy-950 py-20 text-white">
         <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #d9a62e 0%, transparent 40%), radial-gradient(circle at 80% 20%, #2a478e 0%, transparent 45%)' }}
+          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #e67f39 0%, transparent 40%), radial-gradient(circle at 80% 20%, #4faa70 0%, transparent 45%)' }}
         />
         <div className="relative mx-auto max-w-7xl px-6 text-center">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="font-arabic text-3xl text-gold-400">
             {school.mottoArabic}
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
-            About Witty Group of Schools
+            About Attenweer Schools
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="mx-auto mt-4 max-w-2xl text-lg text-cream-100/80">
-            An Islamic and Western model of learning — where timeless faith meets world-class academics.
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }} className="mx-auto mt-4 max-w-3xl text-lg text-cream-100/80">
+            A co-educational institution committed to nurturing knowledgeable, morally upright and confident learners
+            through a balanced blend of Islamic and Western education.
           </motion.p>
         </div>
       </section>
@@ -45,33 +57,30 @@ export default function About() {
           <motion.div {...fadeUp()}>
             <p className="text-sm font-bold uppercase tracking-widest text-gold-600">Who We Are</p>
             <h2 className="mt-2 text-3xl font-extrabold leading-tight tracking-tight text-navy-900">
-              A Twin Heritage of Faith<br /> and Scholarship
+              A Balanced Blend of Faith<br /> and Scholarship
             </h2>
             <div className="mt-6 space-y-4 leading-relaxed text-slate-600">
               <p>
-                Witty Group of Schools is a distinguished community of learners nestled along Basin Road,
-                beside NHIS, Ilorin, Kwara State. We are proud to offer a distinctive blend of an{' '}
-                <strong className="text-navy-800">Islamic upbringing</strong> and a{' '}
-                <strong className="text-navy-800">Western-standard education</strong> — two streams that
-                flow together to cultivate children who are intellectually brilliant, morally upright,
-                and spiritually grounded.
+                Attenweer Schools is a co-educational institution committed to nurturing knowledgeable, morally
+                upright, and confident learners through a balanced blend of Islamic and Western education. The school
+                is located at No. 194, beside Kwara State Television Station, Old Jebba Road, Yakuba, Ilorin East
+                Local Government Area of Kwara State.
               </p>
               <p>
-                Guided by our motto, <em className="font-semibold text-navy-800">"Success in Both Worlds"</em>{' '}
-                (الفلاح في الدارين — <em>Al-Falah fi al-Darayn</em>), our learners are taught that true
-                excellence is measured not only in grades, but in character, worship, integrity, and
-                service to humanity. From hafiz to engineer, from poet to scientist — every dream is
-                nurtured here.
+                The foundation of Attenweer Schools is built on the belief that true success is achieved through
+                knowledge guided by sound morals and values. Our educational approach is inspired by the teachings of
+                the Qur&rsquo;an and Sunnah, combined with a strong academic curriculum that prepares learners for
+                both worldly excellence and responsible citizenship.
               </p>
               <p>
-                Our competent and caring staff blend modern teaching methods with time-honoured values,
-                giving each child tailored guidance that matches their unique academic and moral
-                background. We partner closely with parents and guardians, providing the counselling and
-                insights they need to support their children at every stage.
+                The school was established on 18th September 2023 by the Islamic Enlightenment Foundation of Nigeria,
+                a registered non-governmental organization dedicated to educational development and moral
+                reorientation. Since inception, the school has remained focused on providing quality education at
+                subsidized fees, ensuring accessibility for both the rich and the poor within the society.
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
-              {['Nurturing', 'Faith-based', 'Modern', 'Disciplined'].map((t) => (
+              {['Islamic', 'Western', 'Faith-based', 'Disciplined'].map((t) => (
                 <span key={t} className="rounded-full bg-cream-100 px-4 py-1.5 text-sm font-semibold text-navy-800">
                   {t}
                 </span>
@@ -83,9 +92,7 @@ export default function About() {
             <div className="rounded-2xl border border-navy-100 bg-navy-50/40 p-6">
               <Target className="text-gold-500" size={28} />
               <h3 className="mt-3 text-lg font-bold text-navy-900">Our Mission</h3>
-              {school.mission && (
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{school.mission}</p>
-              )}
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{school.mission}</p>
             </div>
             <div className="rounded-2xl border border-navy-100 bg-cream-50 p-6">
               <Eye className="text-gold-500" size={28} />
@@ -100,10 +107,8 @@ export default function About() {
             </div>
             <div className="rounded-2xl border border-navy-100 bg-white p-6 shadow-card">
               <Shield className="text-gold-500" size={28} />
-              <h3 className="mt-3 text-lg font-bold text-navy-900">Our Heritage</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                Serving families in Ilorin and beyond since {school.established}, uniting Qur'anic excellence with Nigerian curriculum standards.
-              </p>
+              <h3 className="mt-3 text-lg font-bold text-navy-900">Our Philosophy</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{school.philosophy}</p>
             </div>
           </motion.div>
         </div>
@@ -139,11 +144,11 @@ export default function About() {
 
       <section className="mx-auto max-w-7xl px-6 py-20">
         <motion.div {...fadeUp()} className="text-center">
-          <p className="text-sm font-bold uppercase tracking-widest text-gold-600">Our Leaders</p>
-          <h2 className="mt-2 text-3xl font-extrabold text-navy-900">Management Team</h2>
+          <p className="text-sm font-bold uppercase tracking-widest text-gold-600">Our Story</p>
+          <h2 className="mt-2 text-3xl font-extrabold text-navy-900">Leadership & Foundation</h2>
         </motion.div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {management.map((m, i) => (
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {leadership.map((m, i) => (
             <motion.div
               key={m.name}
               {...fadeUp(i)}
@@ -154,7 +159,7 @@ export default function About() {
               </span>
               <h3 className="mt-4 font-bold text-navy-900">{m.name}</h3>
               <p className="text-sm font-medium text-gold-600">{m.role}</p>
-              <p className="mt-3 text-sm italic leading-relaxed text-slate-500">"{m.quote}"</p>
+              <p className="mt-3 text-sm italic leading-relaxed text-slate-500">&ldquo;{m.quote}&rdquo;</p>
             </motion.div>
           ))}
         </div>
